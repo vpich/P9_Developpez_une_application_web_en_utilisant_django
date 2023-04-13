@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Bienvenue {{ request.user }} !</h1>
+    <section>
+        <p>Vous êtes connecté.</p>
+        <a href="{% url 'logout' %}">Se déconnecter</a>
+    </section>
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+</body>
+</html>
