@@ -21,4 +21,5 @@ import authentication.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", authentication.views.LoginPageView.as_view(), name="login"),
+    path("signup/", authentication.views.RegisterPageView.as_view(), name="signup"),
 ]
