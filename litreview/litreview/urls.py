@@ -17,9 +17,12 @@ from django.contrib import admin
 from django.urls import path
 
 import authentication.views
+import review.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", authentication.views.LoginPageView.as_view(), name="login"),
-    path("signup/", authentication.views.RegisterPageView.as_view(), name="signup"),
+    path("signup/", authentication.views.SignupPage.as_view(), name="signup"),
+    path("home/", review.views.home, name="home"),
+    path("logout/", authentication.views.logout_user, name="logout"),
 ]
