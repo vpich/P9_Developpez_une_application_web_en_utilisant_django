@@ -47,6 +47,7 @@ class CreateTicket(View):
             ticket.user = request.user
             ticket.save()
             return redirect("ticket-detail", ticket.id)
+        return redirect("create-ticket")
 
 
 class TicketView(View):
@@ -76,6 +77,7 @@ class UpdateTicket(View):
             ticket.image = form.cleaned_data["image"]
             ticket.save()
             return redirect("ticket-detail", ticket_id)
+        return redirect("update-ticket", ticket_id)
 
 
 class DeleteTicket(View):
@@ -91,12 +93,64 @@ class DeleteTicket(View):
         return redirect("home")
 
 
-class ReviewView(View):
+class CreateReview(View):
     form = forms.ReviewForm
 
     def get(self, request):
         form = self.form()
         return render(request,
-                      "review/review_detail.html",
+                      "review/create_review.html",
                       {"form": form})
 
+    def post(self, request):
+        form = self.form(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.save()
+            return redirect("review-detail", review.id)
+        return redirect("create-review")
+
+
+class ReviewView(View):
+    def get(self, request, review_id):
+        review = get_object_or_404(models.Review, id=review_id)
+        return render(request,
+                      "review/review_detail.html",
+                      {"review": review})
+
+
+class UpdateReview(View):
+    form = forms.ReviewForm
+
+    def get(self, request, review_id):
+        review = get_object_or_404(models.Review, id=review_id)
+        form = self.form(instance=review)
+        return render(request,
+                      "review/update_review.html",
+                      {"form": form})
+
+    def post(self, request, review_id):
+        review = get_object_or_404(models.Review, id=review_id)
+        form = self.form(request.POST)
+        if form.is_valid():
+            # review.ticket = form.cleaned_data["ticket"]
+            review.rating = form.cleaned_data["rating"]
+            review.headline = form.cleaned_data["headline"]
+            review.body = form.cleaned_data["body"]
+            review.save()
+            return redirect("review-detail", review_id)
+        return redirect("update-review", review_id)
+
+
+class DeleteReview(View):
+    def get(self, request, review_id):
+        review = get_object_or_404(models.Review, id=review_id)
+        return render(request,
+                      "review/delete_review.html",
+                      {"review": review})
+
+    def post(self, request, review_id):
+        review = get_object_or_404(models.Review, id=review_id)
+        review.delete()
+        return redirect("home")

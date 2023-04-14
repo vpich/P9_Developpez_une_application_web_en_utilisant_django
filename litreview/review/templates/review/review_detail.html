@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<section>
+    <h2>{{ review.headline }}</h2>
+    <p>Créé le {{ review.time_created }} par {{ review.user.username }}</p>
+    <div>
+        <p>En réponse au ticket n°{{ review.ticket.id }}, {{ review.ticket.title }}</p>
+        <p>Note: {{ review.rating }}</p>
+        <p>Contenu de la critique: {{ review.body }}</p>
+        <a href="{% url 'update-review' review.id %}">Modifier la critique</a>
+        <a href="{% url 'delete-review' review.id %}">Supprimer la critique</a>
+    </div>
+</section>
+
+</body>
+</html>

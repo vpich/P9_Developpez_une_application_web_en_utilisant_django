@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <section>
+        <h2>Suppression de la critique</h2>
+        <p>Êtes-vous sûr de vouloir supprimer cette critique ?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit">Supprimer</button>
+        </form>
+    </section>
+</body>
+</html>

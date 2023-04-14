@@ -29,4 +29,8 @@ urlpatterns = [
     path("ticket/<int:ticket_id>/", review.views.TicketView.as_view(), name="ticket-detail"),
     path("ticket/<int:ticket_id>/update/", review.views.UpdateTicket.as_view(), name="update-ticket"),
     path("ticket/<int:ticket_id>/delete/", review.views.DeleteTicket.as_view(), name="delete-ticket"),
+    path("review/create/", review.views.CreateReview.as_view(), name="create-review"),
+    path("review/<int:review_id>/", review.views.ReviewView.as_view(), name="review-detail"),
+    path("review/<int:review_id>/update/", review.views.UpdateReview.as_view(), name="update-review"),
+    path("review/<int:review_id>/delete/", review.views.DeleteReview.as_view(), name="delete-review"),
 ]
