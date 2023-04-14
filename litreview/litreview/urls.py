@@ -25,5 +25,8 @@ urlpatterns = [
     path("signup/", authentication.views.SignupPage.as_view(), name="signup"),
     path("logout/", authentication.views.logout_user, name="logout"),
     path("home/", review.views.home, name="home"),
-    path("ticket/create/", review.views.CreateTicket.as_view()),
+    path("ticket/create/", review.views.CreateTicket.as_view(), name="create-ticket"),
+    path("ticket/<int:ticket_id>/", review.views.TicketView.as_view(), name="ticket-detail"),
+    path("ticket/<int:ticket_id>/update/", review.views.UpdateTicket.as_view(), name="update-ticket"),
+    path("ticket/<int:ticket_id>/delete/", review.views.DeleteTicket.as_view(), name="delete-ticket"),
 ]
