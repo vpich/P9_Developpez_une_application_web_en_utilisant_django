@@ -1,13 +1,32 @@
+from itertools import chain
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
+from django.db.models import CharField, Value
 
 from . import forms, models
 
-# class Feed(View):
-#     pass
+
+class Feed(View):
+    def get(self, request):
+        tickets = models.Ticket.objects.all()
+        tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+
+        reviews = models.Review.objects.all()
+        reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+
+        posts = sorted(
+            chain(tickets, reviews),
+            key=lambda post: post.time_created,
+            reverse=True
+        )
+
+        return render(request,
+                      "review/feed.html",
+                      {"posts": posts})
 
 
 # class LoginRequiredMixin(object):

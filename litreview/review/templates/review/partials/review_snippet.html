@@ -1,0 +1,8 @@
+<div>
+    <h3>Critique: {{ review.headline }}</h3>
+    <div>
+        <a href="{% url 'review-detail' review.id %}">
+            <p>Rating: {{ review.rating }}</p>
+        </a>
+    </div>
+</div>

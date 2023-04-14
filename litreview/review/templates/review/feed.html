@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>Bienvenue {{ request.user }} !</h1>
+
+    <section>
+        <p>Vous êtes connecté.</p>
+        <a href="{% url 'logout' %}">Se déconnecter</a>
+    </section>
+
+    <section>
+        {% for post in posts %}
+            {% if post.content_type == "TICKET" %}
+                {% include "review/partials/ticket_snippet.html" with ticket=post %}
+            {% endif %}
+
+            {% if post.content_type == "REVIEW" %}
+                {% include "review/partials/review_snippet.html" with review=post %}
+            {% endif %}
+        {% endfor %}
+    </section>
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+</body>
+</html>
