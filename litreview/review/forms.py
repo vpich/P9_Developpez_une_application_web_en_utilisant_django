@@ -21,4 +21,7 @@ class ReviewForm(forms.ModelForm):
 
 
 class UserFollowsForm(forms.ModelForm):
-    followed_user = forms.CharField(max_length=150)
+    class Meta:
+        model = models.UserFollows
+        fields = ["followed_user", ]
+

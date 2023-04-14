@@ -173,3 +173,31 @@ class DeleteReview(View):
         review = get_object_or_404(models.Review, id=review_id)
         review.delete()
         return redirect("home")
+
+
+class FollowedUsersPage(View):
+    def get(self, request):
+        follows = models.UserFollows.objects.all()
+
+        return render(request,
+                      "review/followed_users.html",
+                      {"follows": follows})
+
+
+class Follow(View):
+    form = forms.UserFollowsForm
+
+    def get(self, request):
+        form = self.form()
+        return render(request,
+                      "review/follow.html",
+                      {"form": form})
+
+    def post(self, request):
+        form = self.form(request.POST)
+        if form.is_valid():
+            follow = form.save(commit=False)
+            follow.user = request.user
+            follow.save()
+            return redirect("followed-users")
+        return redirect("follow")
