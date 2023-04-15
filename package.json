@@ -1,0 +1,19 @@
+{
+  "name": "p9_developpez_une_application_web_en_utilisant_django",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sass": "sass --watch ./sass/main.scss:./litreview/authentication/static/authentication/style.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vpich/P9_Developpez_une_application_web_en_utilisant_django.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vpich/P9_Developpez_une_application_web_en_utilisant_django/issues"
+  },
+  "homepage": "https://github.com/vpich/P9_Developpez_une_application_web_en_utilisant_django#readme"
+}

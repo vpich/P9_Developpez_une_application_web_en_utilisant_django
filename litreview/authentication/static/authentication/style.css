@@ -1,0 +1,15 @@
+body {
+  color: red;
+}
+
+header {
+  border: solid;
+  text-align: center;
+}
+
+#main-container {
+  display: flex;
+  border: solid;
+}
+
+/*# sourceMappingURL=style.css.map */

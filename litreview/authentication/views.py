@@ -3,15 +3,18 @@ from django.contrib.auth import login, authenticate, logout
 from django.views import View
 from django.contrib import messages
 
-from . import forms
+from . import forms, models
 
 
 class LoginPageView(View):
     form = forms.LoginForm
     template_name = "authentication/login.html"
+    users = models.User.objects.all()
 
     def get(self, request):
         form = self.form()
+        if request.user in self.users:
+            return redirect("home")
         return render(request,
                       self.template_name,
                       {"form": form})

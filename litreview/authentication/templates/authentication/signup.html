@@ -1,15 +1,18 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-  <h2>S'inscrire</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'authentication/style.css' %}" />
+{% endblock %}
+
+{% block content %}
+  <h2>Inscrivez-vous</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Envoyer</button>
+    <button type="submit">S'inscrire</button>
   </form>
-</body>
-</html>
+    <a href="{% url 'login' %}">
+        <button>Retourner</button>
+    </a>
+{% endblock %}

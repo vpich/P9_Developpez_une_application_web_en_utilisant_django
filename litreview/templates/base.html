@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>LITReview</title>
+    {% block style %}
+    {% endblock %}
+</head>
+
+<body>
+  <header>
+    <h1>LITReview</h1>
+      <nav>
+          <a href="{% url 'home' %}">Flux</a>
+          <a href="">Posts</a>
+          <a href="{% url 'followed-users' %}">Abonnements</a>
+          <a href="{% url 'logout' %}">Se déconnecter</a>
+      </nav>
+  </header>
+
+
+
+    <div id="main-container">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
