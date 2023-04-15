@@ -1,5 +1,6 @@
 <div>
     <h3>Ticket: {{ ticket.title }}</h3>
+    <p>Créé le {{ ticket.time_created }} par {{ ticket.user }}</p>
     <div>
         <a href="{% url 'ticket-detail' ticket.id %}">
             <p>Description: {{ ticket.description }}</p>

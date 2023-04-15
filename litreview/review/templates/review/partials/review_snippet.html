@@ -1,5 +1,6 @@
 <div>
     <h3>Critique: {{ review.headline }}</h3>
+    <p>Créé par {{ review.user }} le {{ review.time_created }}</p>
     <div>
         <a href="{% url 'review-detail' review.id %}">
             <p>Rating: {{ review.rating }}</p>

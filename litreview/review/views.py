@@ -12,10 +12,15 @@ from . import forms, models
 
 class Feed(View):
     def get(self, request):
-        tickets = models.Ticket.objects.all()
+        follows = models.UserFollows.objects.filter(user=request.user.id)
+        tickets = models.Ticket.objects.filter(
+            user__in=follows.values("followed_user")
+        )
         tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
 
-        reviews = models.Review.objects.all()
+        reviews = models.Review.objects.filter(
+            user__in=follows.values("followed_user")
+        )
         reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
 
         posts = sorted(
@@ -28,6 +33,37 @@ class Feed(View):
                       "review/feed.html",
                       {"posts": posts})
 
+
+def feed(request, feed_type):
+    tickets = models.Ticket.objects.filter(title__exact='')
+    reviews = models.Review.objects.filter(headline__exact='')
+    if feed_type == 1:
+        follows = models.UserFollows.objects.filter(user=request.user.id)
+        tickets = models.Ticket.objects.filter(
+            user__in=follows.values("followed_user")
+        )
+
+        reviews = models.Review.objects.filter(
+            user__in=follows.values("followed_user")
+        )
+
+    elif feed_type == 2:
+        tickets = models.Ticket.objects.filter(user=request.user.id)
+
+    elif feed_type == 3:
+        own_tickets = models.Ticket.objects.filter(user=request.user.id)
+        reviews = models.Review.objects.filter(ticket__in=own_tickets)
+
+    tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+    reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+
+    posts = sorted(
+        chain(tickets, reviews),
+        key=lambda post: post.time_created,
+        reverse=True
+    )
+
+    return posts
 
 # class LoginRequiredMixin(object):
 #     @method_decorator(login_required)
@@ -46,8 +82,21 @@ class Feed(View):
 
 @login_required(login_url="login")
 def home(request):
+    posts_followed = feed(request, 1)
+    own_tickets = feed(request, 2)
+    tickets_responded = feed(request, 3)
+
+    print(request.user.id)
+
+    context = {
+        "posts_followed": posts_followed,
+        "own_tickets": own_tickets,
+        "tickets_responded": tickets_responded,
+    }
+
     return render(request,
-                  "review/home.html")
+                  "review/home.html",
+                  context)
 
 
 class CreateTicket(View):

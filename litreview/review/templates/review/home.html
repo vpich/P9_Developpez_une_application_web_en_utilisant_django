@@ -11,6 +11,45 @@
         <a href="{% url 'logout' %}">Se déconnecter</a>
     </section>
 
+    <section>
+        <h2>Tickets et avis des personnes suivies</h2>
+        {% for post in posts_followed %}
+            {% if post.content_type == "TICKET" %}
+                {% include "review/partials/ticket_snippet.html" with ticket=post %}
+            {% endif %}
+
+            {% if post.content_type == "REVIEW" %}
+                {% include "review/partials/review_snippet.html" with review=post %}
+            {% endif %}
+        {% endfor %}
+    </section>
+
+    <section>
+        <h2>Tickets créés par soi même</h2>
+        {% for post in own_tickets %}
+            {% if post.content_type == "TICKET" %}
+                {% include "review/partials/ticket_snippet.html" with ticket=post %}
+            {% endif %}
+
+            {% if post.content_type == "REVIEW" %}
+                {% include "review/partials/review_snippet.html" with review=post %}
+            {% endif %}
+        {% endfor %}
+    </section>
+
+    <section>
+        <h2>Avis en réponses à ses tickets</h2>
+        {% for post in tickets_responded %}
+            {% if post.content_type == "TICKET" %}
+                {% include "review/partials/ticket_snippet.html" with ticket=post %}
+            {% endif %}
+
+            {% if post.content_type == "REVIEW" %}
+                {% include "review/partials/review_snippet.html" with review=post %}
+            {% endif %}
+        {% endfor %}
+    </section>
+
 {% if messages %}
     {% for message in messages %}
         <p>{{ message }}</p>
