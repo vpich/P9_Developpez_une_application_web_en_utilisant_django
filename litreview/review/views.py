@@ -10,30 +10,6 @@ from django.db.models import CharField, Value
 from . import forms, models
 
 
-class Feed(View):
-    def get(self, request):
-        follows = models.UserFollows.objects.filter(user=request.user.id)
-        tickets = models.Ticket.objects.filter(
-            user__in=follows.values("followed_user")
-        )
-        tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
-
-        reviews = models.Review.objects.filter(
-            user__in=follows.values("followed_user")
-        )
-        reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
-
-        posts = sorted(
-            chain(tickets, reviews),
-            key=lambda post: post.time_created,
-            reverse=True
-        )
-
-        return render(request,
-                      "review/feed.html",
-                      {"posts": posts})
-
-
 def feed(request, feed_type):
     tickets = models.Ticket.objects.filter(title__exact='')
     reviews = models.Review.objects.filter(headline__exact='')
@@ -178,6 +154,30 @@ class CreateReview(View):
             review.save()
             return redirect("review-detail", review.id)
         return redirect("create-review")
+
+
+class CreateReviewResponse(View):
+    form = forms.ReviewForm
+    model = models.Ticket
+
+    def get(self, request, ticket_id):
+        form = self.form()
+        ticket = self.model.objects.get(id=ticket_id)
+        return render(request,
+                      "review/create_review_response.html",
+                      {"form": form,
+                       "ticket": ticket})
+
+    def post(self, request, ticket_id):
+        form = self.form(request.POST)
+        ticket = self.model.objects.get(id=ticket_id)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = request.user
+            review.ticket = ticket
+            review.save()
+            return redirect("review-detail", review.id)
+        return redirect("create-review-response")
 
 
 class ReviewView(View):
