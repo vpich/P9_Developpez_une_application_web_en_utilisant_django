@@ -36,4 +36,5 @@ urlpatterns = [
     path("review/<int:review_id>/delete/", review.views.DeleteReview.as_view(), name="delete-review"),
     path("followed-users/", review.views.FollowedUsersPage.as_view(), name="followed-users"),
     path("follow/", review.views.Follow.as_view(), name="follow"),
+    path("follow/delete/<int:follow_id>/", review.views.DeleteFollow.as_view(), name="delete-follow"),
 ]

@@ -250,3 +250,19 @@ class Follow(View):
             follow.save()
             return redirect("followed-users")
         return redirect("follow")
+
+
+class DeleteFollow(View):
+    model = models.UserFollows
+
+    def get(self, request, follow_id):
+        follow = self.model.objects.get(id=follow_id)
+
+        return render(request,
+                      "review/delete_follow.html",
+                      {"follow": follow})
+
+    def post(self, request, follow_id):
+        follow = self.model.objects.get(id=follow_id)
+        follow.delete()
+        return redirect("followed-users")

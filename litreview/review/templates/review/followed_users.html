@@ -10,6 +10,7 @@
         {% if follows %}
             {% for follow in follows %}
                 <p>{{ follow.user }} suit {{ follow.followed_user }}</p>
+                <a href="{% url 'delete-follow' follow.id %}">Supprimer</a>
             {% endfor %}
         {% else %}
             <p>Vous ne suivez pas encore d'utilisateurs.</p>
