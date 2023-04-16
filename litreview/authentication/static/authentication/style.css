@@ -1,7 +1,3 @@
-body {
-  color: red;
-}
-
 header {
   border: solid;
   text-align: center;
@@ -10,6 +6,20 @@ header {
 #main-container {
   display: flex;
   border: solid;
+  justify-content: center;
+}
+
+#feed section {
+  display: flex;
+  flex-direction: column;
+}
+#feed section div {
+  border: solid;
+}
+
+#responded-ticket {
+  border: solid;
+  margin: 5px;
 }
 
 /*# sourceMappingURL=style.css.map */

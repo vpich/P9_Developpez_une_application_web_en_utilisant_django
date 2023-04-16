@@ -1,9 +1,23 @@
 <div>
-    <h3>Critique: {{ review.headline }}</h3>
-    <p>Créé par {{ review.user }} le {{ review.time_created }}</p>
-    <div>
-        <a href="{% url 'review-detail' review.id %}">
-            <p>Rating: {{ review.rating }}</p>
-        </a>
-    </div>
+    {% if request.user == review.user %}
+        <p>Vous avez publié une critique</p>
+    {% else %}
+        <p>{{ review.user }} a publié une critique</p>
+    {% endif %}
+    <p>{{ review.time_created }}</p>
+    <a href="{% url 'review-detail' review.id %}">
+        <h2>{{ review.headline }}</h2>
+    </a>
+    <p>Rating: {{ review.rating }}</p>
+    <p>{{ review.body }}</p>
+
+    {% if review.ticket %}
+        <div id="responded-ticket">
+            <p>Ticket - {{ review.ticket.user }}</p>
+            <p>{{ review.ticket.title }}</p>
+            {% if review.ticket.image %}
+                <img src="{{ review.ticket.image.url }}">
+            {% endif %}
+        </div>
+    {% endif %}
 </div>

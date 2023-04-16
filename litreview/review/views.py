@@ -5,9 +5,38 @@ from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.db.models import CharField, Value
+from django.db.models import CharField, Value, Q
 
 from . import forms, models
+
+
+class Feed(View):
+    def get(self, request):
+
+        follows = models.UserFollows.objects.filter(user=request.user.id)
+        tickets = models.Ticket.objects.filter(
+            Q(user__in=follows.values("followed_user")) |
+            Q(user=request.user.id)
+        )
+
+        own_tickets = models.Ticket.objects.filter(user=request.user.id)
+        reviews = models.Review.objects.filter(
+            Q(user__in=follows.values("followed_user")) |
+            Q(ticket__in=own_tickets)
+        )
+
+        tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+        reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+
+        posts = sorted(
+            chain(tickets, reviews),
+            key=lambda post: post.time_created,
+            reverse=True
+        )
+
+        return render(request,
+                      "review/feed.html",
+                      {"posts": posts})
 
 
 def feed(request, feed_type):
