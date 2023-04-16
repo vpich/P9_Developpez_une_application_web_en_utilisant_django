@@ -39,36 +39,36 @@ class Feed(View):
                       {"posts": posts})
 
 
-def feed(request, feed_type):
-    tickets = models.Ticket.objects.filter(title__exact='')
-    reviews = models.Review.objects.filter(headline__exact='')
-    if feed_type == 1:
-        follows = models.UserFollows.objects.filter(user=request.user.id)
-        tickets = models.Ticket.objects.filter(
-            user__in=follows.values("followed_user")
-        )
-
-        reviews = models.Review.objects.filter(
-            user__in=follows.values("followed_user")
-        )
-
-    elif feed_type == 2:
-        tickets = models.Ticket.objects.filter(user=request.user.id)
-
-    elif feed_type == 3:
-        own_tickets = models.Ticket.objects.filter(user=request.user.id)
-        reviews = models.Review.objects.filter(ticket__in=own_tickets)
-
-    tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
-    reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
-
-    posts = sorted(
-        chain(tickets, reviews),
-        key=lambda post: post.time_created,
-        reverse=True
-    )
-
-    return posts
+# def feed(request, feed_type):
+#     tickets = models.Ticket.objects.filter(title__exact='')
+#     reviews = models.Review.objects.filter(headline__exact='')
+#     if feed_type == 1:
+#         follows = models.UserFollows.objects.filter(user=request.user.id)
+#         tickets = models.Ticket.objects.filter(
+#             user__in=follows.values("followed_user")
+#         )
+#
+#         reviews = models.Review.objects.filter(
+#             user__in=follows.values("followed_user")
+#         )
+#
+#     elif feed_type == 2:
+#         tickets = models.Ticket.objects.filter(user=request.user.id)
+#
+#     elif feed_type == 3:
+#         own_tickets = models.Ticket.objects.filter(user=request.user.id)
+#         reviews = models.Review.objects.filter(ticket__in=own_tickets)
+#
+#     tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+#     reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+#
+#     posts = sorted(
+#         chain(tickets, reviews),
+#         key=lambda post: post.time_created,
+#         reverse=True
+#     )
+#
+#     return posts
 
 # class LoginRequiredMixin(object):
 #     @method_decorator(login_required)
@@ -85,23 +85,23 @@ def feed(request, feed_type):
 #         logout_user(request)
 #         return redirect("login")
 
-@login_required(login_url="login")
-def home(request):
-    posts_followed = feed(request, 1)
-    own_tickets = feed(request, 2)
-    tickets_responded = feed(request, 3)
-
-    print(request.user.id)
-
-    context = {
-        "posts_followed": posts_followed,
-        "own_tickets": own_tickets,
-        "tickets_responded": tickets_responded,
-    }
-
-    return render(request,
-                  "review/home.html",
-                  context)
+# @login_required(login_url="login")
+# def home(request):
+#     posts_followed = feed(request, 1)
+#     own_tickets = feed(request, 2)
+#     tickets_responded = feed(request, 3)
+#
+#     print(request.user.id)
+#
+#     context = {
+#         "posts_followed": posts_followed,
+#         "own_tickets": own_tickets,
+#         "tickets_responded": tickets_responded,
+#     }
+#
+#     return render(request,
+#                   "review/home.html",
+#                   context)
 
 
 class CreateTicket(View):
@@ -253,23 +253,28 @@ class DeleteReview(View):
         return redirect("home")
 
 
-class FollowedUsersPage(View):
-    def get(self, request):
-        follows = models.UserFollows.objects.all()
+# class FollowedUsersPage(View):
+#     def get(self, request):
+#         follows = models.UserFollows.objects.all()
+#
+#         return render(request,
+#                       "review/followed_users.html",
+#                       {"follows": follows})
 
-        return render(request,
-                      "review/followed_users.html",
-                      {"follows": follows})
 
-
-class Follow(View):
+class FollowPage(View):
     form = forms.UserFollowsForm
 
     def get(self, request):
         form = self.form()
+        follows = models.UserFollows.objects.filter(user=request.user)
+        followers = models.UserFollows.objects.filter(followed_user=request.user)
+
         return render(request,
-                      "review/follow.html",
-                      {"form": form})
+                      "review/followed_users.html",
+                      {"follows": follows,
+                       "form": form,
+                       "followers": followers})
 
     def post(self, request):
         form = self.form(request.POST)
@@ -278,7 +283,26 @@ class Follow(View):
             follow.user = request.user
             follow.save()
             return redirect("followed-users")
-        return redirect("follow")
+        return redirect("followed-users")
+
+
+# class Follow(View):
+#     form = forms.UserFollowsForm
+#
+#     def get(self, request):
+#         form = self.form()
+#         return render(request,
+#                       "review/follow.html",
+#                       {"form": form})
+#
+#     def post(self, request):
+#         form = self.form(request.POST)
+#         if form.is_valid():
+#             follow = form.save(commit=False)
+#             follow.user = request.user
+#             follow.save()
+#             return redirect("followed-users")
+#         return redirect("follow")
 
 
 class DeleteFollow(View):

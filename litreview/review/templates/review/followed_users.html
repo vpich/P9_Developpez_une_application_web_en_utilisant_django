@@ -1,20 +1,47 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <section>
-        <h1>Utilisateurs suivis</h1>
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'authentication/style.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div id="follow-page">
+    <div>
+        <h2>Suivre d'autres utilisateurs</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Abonnements</h2>
         {% if follows %}
             {% for follow in follows %}
-                <p>{{ follow.user }} suit {{ follow.followed_user }}</p>
-                <a href="{% url 'delete-follow' follow.id %}">Supprimer</a>
+                <div>
+                    <p>{{ follow.user }} suit {{ follow.followed_user }}</p>
+                    <a href="{% url 'delete-follow' follow.id %}">Désabonner</a>
+                </div>
             {% endfor %}
         {% else %}
             <p>Vous ne suivez pas encore d'utilisateurs.</p>
         {% endif %}
-    </section>
-</body>
-</html>
+    </div>
+
+    <div>
+        <h2>Abonnés</h2>
+        {% if followers %}
+            {% for follower in followers %}
+                <div>
+                    <p>{{ follower.user }} suit {{ follower.followed_user }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Personne ne vous suit.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
