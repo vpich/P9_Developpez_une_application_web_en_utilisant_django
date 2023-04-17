@@ -32,4 +32,14 @@ header {
   display: none;
 }
 
+#posts {
+  border: solid;
+}
+#posts div {
+  border: solid;
+}
+#posts div div button {
+  display: none;
+}
+
 /*# sourceMappingURL=style.css.map */

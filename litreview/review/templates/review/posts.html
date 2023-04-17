@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'authentication/style.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div id="posts">
+    <h2>Vos posts</h2>
+
+    {% for post in posts %}
+        {% if post.content_type == "TICKET" %}
+            {% include "review/partials/ticket_snippet.html" with ticket=post %}
+            <a href="{% url 'update-ticket' post.id %}">
+                <button>Modifier</button>
+            </a>
+            <a href="{% url 'delete-ticket' post.id %}">
+                <button>Supprimer</button>
+            </a>
+        {% endif %}
+
+        {% if post.content_type == "REVIEW" %}
+            {% include "review/partials/review_snippet.html" with review=post %}
+            <a href="{% url 'update-review' post.id %}">
+                <button>Modifier</button>
+            </a>
+            <a href="{% url 'delete-review' post.id %}">
+                <button>Supprimer</button>
+            </a>
+        {% endif %}
+
+    {% endfor %}
+
+</div>
+{% endblock %}

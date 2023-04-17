@@ -39,6 +39,27 @@ class Feed(View):
                       {"posts": posts})
 
 
+class PostsPage(View):
+    ticket_form = models.Ticket
+    review_form = models.Review
+
+    def get(self, request):
+        tickets = self.ticket_form.objects.filter(user=request.user)
+        reviews = self.review_form.objects.filter(user=request.user)
+
+        tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
+        reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
+
+        posts = sorted(
+            chain(tickets, reviews),
+            key=lambda post: post.time_created,
+            reverse=True,
+        )
+
+        return render(request,
+                      "review/posts.html",
+                      {"posts": posts})
+
 # def feed(request, feed_type):
 #     tickets = models.Ticket.objects.filter(title__exact='')
 #     reviews = models.Review.objects.filter(headline__exact='')
@@ -233,7 +254,8 @@ class UpdateReview(View):
         form = self.form(instance=review)
         return render(request,
                       "review/update_review.html",
-                      {"form": form})
+                      {"form": form,
+                       "review": review})
 
     def post(self, request, review_id):
         review = get_object_or_404(models.Review, id=review_id)

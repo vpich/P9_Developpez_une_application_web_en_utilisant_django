@@ -34,3 +34,15 @@ header {
     }
 
 }
+
+#posts {
+    border: solid;
+    div {
+        border: solid;
+        div {
+            button {
+                display: none;
+            }
+        }
+    }
+}

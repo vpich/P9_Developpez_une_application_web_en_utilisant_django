@@ -1,15 +1,25 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h2>Modifier la critique</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'authentication/style.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div>
+
+    <h2>Modifier votre critique</h2>
+    <div id="ticket-while-response">
+        <p>Vous êtes en train de poster en réponse à</p>
+        {% include "review/partials/ticket_snippet.html" with ticket=review.ticket %}
+    </div>
+    <h3>Critique</h3>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Modifier</button>
+        <button type="submit">Envoyer</button>
     </form>
-</body>
-</html>
+
+</div>
+
+{% endblock %}
