@@ -14,7 +14,7 @@ class LoginPageView(View):
     def get(self, request):
         form = self.form()
         if request.user in self.users:
-            return redirect("home")
+            return redirect("feed")
         return render(request,
                       self.template_name,
                       {"form": form})
@@ -32,7 +32,7 @@ class LoginPageView(View):
                 message = "Vous êtes bien connecté"
                 login(request, user)
                 messages.add_message(request, messages.SUCCESS, message)
-                return redirect("home")
+                return redirect("feed")
 
         return render(request,
                       self.template_name,
@@ -57,7 +57,7 @@ class SignupPage(View):
             login(request, user)
             message = "Votre compte a été créé"
             messages.add_message(request, messages.SUCCESS, message)
-            return redirect("home")
+            return redirect("feed")
 
         return render(request,
                       self.template_name,

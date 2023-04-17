@@ -163,23 +163,31 @@ class DeleteTicket(View):
     def post(self, request, ticket_id):
         ticket = get_object_or_404(models.Ticket, id=ticket_id)
         ticket.delete()
-        return redirect("home")
+        return redirect("feed")
 
 
 class CreateReview(View):
-    form = forms.ReviewForm
+    review_form = forms.ReviewForm
+    ticket_form = forms.TicketForm
 
     def get(self, request):
-        form = self.form()
+        review_form = self.review_form()
+        ticket_form = self.ticket_form()
         return render(request,
                       "review/create_review.html",
-                      {"form": form})
+                      {"review_form": review_form,
+                       "ticket_form": ticket_form})
 
     def post(self, request):
-        form = self.form(request.POST)
-        if form.is_valid():
-            review = form.save(commit=False)
+        review_form = self.review_form(request.POST)
+        ticket_form = self.ticket_form(request.POST, request.FILES)
+        if ticket_form.is_valid() and review_form.is_valid():
+            ticket = ticket_form.save(commit=False)
+            ticket.user = request.user
+            ticket.save()
+            review = review_form.save(commit=False)
             review.user = request.user
+            review.ticket = ticket
             review.save()
             return redirect("review-detail", review.id)
         return redirect("create-review")
@@ -250,7 +258,7 @@ class DeleteReview(View):
     def post(self, request, review_id):
         review = get_object_or_404(models.Review, id=review_id)
         review.delete()
-        return redirect("home")
+        return redirect("feed")
 
 
 # class FollowedUsersPage(View):
