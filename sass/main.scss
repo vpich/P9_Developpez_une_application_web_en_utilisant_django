@@ -23,3 +23,14 @@ header {
     border: solid;
     margin: 5px;
 }
+
+#ticket-while-response {
+    border: solid;
+    div {
+        border: solid;
+        button {
+            display: none;
+        }
+    }
+
+}

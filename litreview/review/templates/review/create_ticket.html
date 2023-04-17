@@ -1,15 +1,17 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h2>Créer un ticket</h2>
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'authentication/style.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>Créer un ticket</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit" >Envoyer</button>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

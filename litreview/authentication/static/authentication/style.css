@@ -22,4 +22,14 @@ header {
   margin: 5px;
 }
 
+#ticket-while-response {
+  border: solid;
+}
+#ticket-while-response div {
+  border: solid;
+}
+#ticket-while-response div button {
+  display: none;
+}
+
 /*# sourceMappingURL=style.css.map */
