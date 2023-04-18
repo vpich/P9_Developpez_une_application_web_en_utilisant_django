@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import CharField, Value, Q
 
+from authentication.models import User
 from . import forms, models
 
 
@@ -293,7 +294,8 @@ class DeleteReview(View):
 
 
 class FollowPage(View):
-    form = forms.UserFollowsForm
+    # form = forms.UserFollowsForm
+    form = forms.FollowForm
 
     def get(self, request):
         form = self.form()
@@ -304,16 +306,32 @@ class FollowPage(View):
                       "review/followed_users.html",
                       {"follows": follows,
                        "form": form,
-                       "followers": followers})
+                       "followers": followers,
+                       "errors": []})
 
     def post(self, request):
+        errors = []
         form = self.form(request.POST)
         if form.is_valid():
-            follow = form.save(commit=False)
+            follow = models.UserFollows()
+            # follow = form.save(commit=False)
             follow.user = request.user
-            follow.save()
-            return redirect("followed-users")
-        return redirect("followed-users")
+            followed_name = form.cleaned_data["followed_name"]
+            try:
+                followed_user = User.objects.get(username=followed_name)
+                follow.followed_user = followed_user
+                follow.save()
+            except User.DoesNotExist:
+                errors.append("Aucun user ne correspond à ce nom.")
+        follows = models.UserFollows.objects.filter(user=request.user)
+        followers = models.UserFollows.objects.filter(followed_user=request.user)
+
+        return render(request,
+                      "review/followed_users.html",
+                      {"follows": follows,
+                       "form": form,
+                       "followers": followers,
+                       "errors": errors})
 
 
 # class Follow(View):

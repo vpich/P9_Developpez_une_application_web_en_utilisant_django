@@ -20,7 +20,7 @@
 </div>
 
 <div id="ticket-buttons">
-    <a href="{% url 'create-review-response' ticket.id %}">
+    <form action="{% url 'create-review-response' ticket.id %}">
         <button>Créer une critique</button>
-    </a>
+    </form>
 </div>

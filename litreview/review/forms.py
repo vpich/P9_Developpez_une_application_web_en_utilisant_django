@@ -35,12 +35,7 @@ class UserFollowsForm(forms.ModelForm):
         model = models.UserFollows
         fields = ["followed_user", ]
 
-        labels = {
-            "followed_user": "Nom d'utilisateur"
-        }
 
-        widgets = {
-            "followed_user": forms.TextInput(attrs={
-                'placeholder': "Nom d'utilisateur"
-            })
-        }
+class FollowForm(forms.Form):
+    followed_name = forms.CharField(label="Nom d'utilisateur",
+                                    widget=forms.TextInput(attrs={"placeholder": "Nom d'utilisateur"}))

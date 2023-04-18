@@ -6,19 +6,21 @@
 {% endblock %}
 
 {% block content %}
-<div>
+<div id="edit-review">
 
     <h2>Modifier votre critique</h2>
-    <div id="ticket-while-response">
-        <p>Vous êtes en train de poster en réponse à</p>
+    <div id="edit-review-ticket">
+        <h3>Vous êtes en train de poster en réponse à</h3>
         {% include "review/partials/ticket_snippet.html" with ticket=review.ticket %}
     </div>
-    <h3>Critique</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Envoyer</button>
-    </form>
+    <div id="edit-review-review">
+        <h3>Critique</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Envoyer</button>
+        </form>
+    </div>
 
 </div>
 

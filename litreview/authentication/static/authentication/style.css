@@ -1,7 +1,7 @@
 header {
   display: flex;
   align-items: center;
-  border: solid;
+  border: solid 1px;
   text-align: center;
   height: 40px;
   justify-content: right;
@@ -14,11 +14,18 @@ header nav {
   z-index: 4;
 }
 
+h2 {
+  text-align: center;
+  margin: 0px;
+  margin-bottom: 10px;
+}
+
 #main-container {
   display: flex;
-  border: solid;
+  border: solid 1px;
   border-top: none;
   justify-content: center;
+  padding: 10px;
 }
 #main-container div {
   width: 60vw;
@@ -31,8 +38,8 @@ header nav {
   margin-bottom: 10px;
 }
 #feed .container {
-  border: solid;
-  margin: 3px;
+  border: solid 1px;
+  margin: 5px;
 }
 #feed #review-date, #feed #ticket-date {
   width: 30%;
@@ -68,33 +75,24 @@ header nav {
 }
 
 #responded-ticket {
-  border: solid;
+  border: solid 1px;
   margin: 5px;
   width: auto;
 }
 
-#ticket-while-response {
-  border: solid;
-  width: initial;
-}
-#ticket-while-response div {
-  border: solid;
-}
-#ticket-while-response div button {
-  display: none;
-}
-
-#posts h2 {
-  text-align: center;
-}
 #posts .container {
-  border: solid;
-  margin: 3px;
+  border: solid 1px;
+  margin: 5px;
 }
 #posts .container-buttons {
-  margin-top: 3px;
+  margin-top: 5px;
   margin-bottom: 3px;
   text-align: right;
+  display: inline-flex;
+  justify-content: right;
+}
+#posts .container-buttons button {
+  margin: 5px;
 }
 #posts #review-date, #posts #ticket-date {
   width: 30%;
@@ -106,17 +104,118 @@ header nav {
   display: none;
 }
 
-#follow-page h2 {
+#followed {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  align-items: center;
+  border: solid 1px;
+}
+#followed p {
+  outline: solid 1px;
+  margin: unset;
+  padding: 5px;
+}
+#followed a {
+  text-align: center;
+  padding: 5px;
+}
+#followers p {
+  margin: auto;
+  padding: 5px;
+  border: solid 1px;
+}
+#follow form {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
   text-align: center;
 }
-#follow-page div div {
-  border: solid;
-  display: flex;
-  align-items: center;
+#follow form label {
+  display: none;
 }
-#follow-page form {
+#follow form input {
+  height: 25px;
+  width: 80%;
+  text-align: center;
+}
+#follow form button {
+  height: 30px;
+  align-self: center;
+}
+
+#signup {
+  text-align: center;
+}
+#signup ul, #signup .helptext {
+  display: none;
+}
+#signup form p label {
+  display: none;
+}
+#signup input {
+  text-align: center;
+  width: 100%;
+}
+#signup button {
+  float: right;
+  margin: 5px;
+}
+
+.error {
+  color: red;
+}
+
+#login, #login-signup {
+  text-align: center;
+}
+#login form p label, #login-signup form p label {
+  display: none;
+}
+#login form button, #login-signup form button {
+  float: right;
+}
+#login input, #login-signup input {
+  text-align: center;
+}
+
+#create-ticket form p, #edit-ticket form p {
+  display: grid;
+}
+#create-ticket button, #edit-ticket button {
+  float: right;
+}
+
+#create-review-response h3, #edit-review h3, #create-review h3 {
+  margin: 0px;
+}
+#create-review-response-ticket, #edit-review-ticket, #create-review-ticket {
+  border: solid 1px;
+}
+#create-review-response-ticket p, #edit-review-ticket p, #create-review-ticket p {
+  display: grid;
+  margin: 10px;
+}
+#create-review-response-ticket #ticket, #edit-review-ticket #ticket, #create-review-ticket #ticket {
+  border: solid 1px;
+  margin: 10px;
+  width: auto;
+}
+#create-review-response-ticket #ticket-buttons, #edit-review-ticket #ticket-buttons, #create-review-ticket #ticket-buttons {
+  display: none;
+}
+#create-review-response-review, #edit-review-review, #create-review-review {
+  border: solid 1px;
+  padding-bottom: 40px;
+}
+#create-review-response-review p, #edit-review-review p, #create-review-review p {
+  display: grid;
+  margin: 10px;
+}
+#create-review-response-review button, #edit-review-review button, #create-review-review button {
+  float: right;
+  margin: 5px;
+}
+#create-review-response #id_rating, #edit-review #id_rating, #create-review #id_rating {
   display: flex;
-  justify-content: space-between;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -6,13 +6,19 @@
 {% endblock %}
 
 {% block content %}
+<div id="signup">
+
   <h2>Inscrivez-vous</h2>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">S'inscrire</button>
   </form>
-    <a href="{% url 'login' %}">
-        <button>Retourner</button>
-    </a>
+
+  <a href="{% url 'login' %}">
+      <button>Retourner</button>
+  </a>
+
+</div>
+
 {% endblock %}

@@ -7,14 +7,14 @@
 
 {% block content %}
 
-<div>
+<div id="create-review-response">
     <h2>Créer une critique</h2>
-    <div id="ticket-while-response">
-        <p>Vous êtes en train de poster en réponse à</p>
+    <div id="create-review-response-ticket">
+        <h3>Vous êtes en train de poster en réponse à</h3>
         {% include "review/partials/ticket_snippet.html" %}
     </div>
 
-    <div>
+    <div id="create-review-response-review">
         <h3>Critique</h3>
         <form method="post" >
             {% csrf_token %}

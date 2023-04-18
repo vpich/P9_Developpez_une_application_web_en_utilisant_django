@@ -14,24 +14,16 @@
             {% if post.content_type == "TICKET" %}
                 {% include "review/partials/ticket_snippet.html" with ticket=post %}
                 <div class="container-buttons">
-                    <a href="{% url 'update-ticket' post.id %}">
-                        <button>Modifier</button>
-                    </a>
-                    <a href="{% url 'delete-ticket' post.id %}">
-                        <button>Supprimer</button>
-                    </a>
+                    <form action="{% url 'update-ticket' post.id %}"><button>Modifier</button></form>
+                    <form action="{% url 'delete-ticket' post.id %}"><button>Supprimer</button></form>
                 </div>
             {% endif %}
 
             {% if post.content_type == "REVIEW" %}
                 {% include "review/partials/review_snippet.html" with review=post %}
                 <div class="container-buttons">
-                    <a href="{% url 'update-review' post.id %}">
-                        <button>Modifier</button>
-                    </a>
-                    <a href="{% url 'delete-review' post.id %}">
-                        <button>Supprimer</button>
-                    </a>
+                    <form action="{% url 'update-review' post.id %}"><button>Modifier</button></form>
+                    <form action="{% url 'delete-review' post.id %}"><button>Supprimer</button></form>
                 </div>
             {% endif %}
         </div>

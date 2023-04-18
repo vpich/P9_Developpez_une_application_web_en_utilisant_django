@@ -6,14 +6,14 @@
 {% endblock %}
 
 {% block content %}
-<div>
+<div id="login-signup">
   <h2>Inscrivez-vous maintenant</h2>
   <a href="{% url 'signup' %}">
     <button>S'inscrire</button>
   </a>
 </div>
 
-<div>
+<div id="login">
   <h2>Connectez-vous</h2>
   <form method="post">
     {% csrf_token %}
