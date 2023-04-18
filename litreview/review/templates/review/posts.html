@@ -10,6 +10,7 @@
     <h2>Vos posts</h2>
 
     {% for post in posts %}
+    <div>
         {% if post.content_type == "TICKET" %}
             {% include "review/partials/ticket_snippet.html" with ticket=post %}
             <a href="{% url 'update-ticket' post.id %}">
@@ -29,6 +30,7 @@
                 <button>Supprimer</button>
             </a>
         {% endif %}
+    </div>
 
     {% endfor %}
 

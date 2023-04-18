@@ -20,8 +20,8 @@
         <h2>Abonnements</h2>
         {% if follows %}
             {% for follow in follows %}
-                <div>
-                    <p>{{ follow.user }} suit {{ follow.followed_user }}</p>
+                <div id="followed">
+                    <p>{{ follow.followed_user }}</p>
                     <a href="{% url 'delete-follow' follow.id %}">Désabonner</a>
                 </div>
             {% endfor %}
@@ -35,7 +35,7 @@
         {% if followers %}
             {% for follower in followers %}
                 <div>
-                    <p>{{ follower.user }} suit {{ follower.followed_user }}</p>
+                    <p>{{ follower.user }}</p>
                 </div>
             {% endfor %}
         {% else %}

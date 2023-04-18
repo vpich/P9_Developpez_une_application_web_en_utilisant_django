@@ -1,29 +1,54 @@
 header {
+  display: flex;
+  align-items: center;
   border: solid;
   text-align: center;
+  height: 40px;
+  justify-content: right;
+}
+header h1 {
+  width: 100%;
+  position: fixed;
 }
 
 #main-container {
   display: flex;
   border: solid;
+  border-top: none;
   justify-content: center;
 }
+#main-container div {
+  width: 60vw;
+}
 
+#feed-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
 #feed section {
   display: flex;
   flex-direction: column;
 }
-#feed section div {
+#feed section .container {
   border: solid;
+  margin: 3px;
+}
+
+#review-content {
+  display: flex;
 }
 
 #responded-ticket {
   border: solid;
   margin: 5px;
+  width: auto;
 }
 
 #ticket-while-response {
   border: solid;
+  width: initial;
 }
 #ticket-while-response div {
   border: solid;
@@ -32,14 +57,30 @@ header {
   display: none;
 }
 
-#posts {
+#posts div {
   border: solid;
 }
-#posts div {
+#posts div div {
+  border: none;
+}
+#posts div div div {
   border: solid;
 }
 #posts div div button {
   display: none;
+}
+
+#follow-page h2 {
+  text-align: center;
+}
+#follow-page div div {
+  border: solid;
+  display: flex;
+  align-items: center;
+}
+#follow-page form {
+  display: flex;
+  justify-content: space-between;
 }
 
 /*# sourceMappingURL=style.css.map */
