@@ -16,9 +16,8 @@
         </a>
     </div>
 
-
-    <section>
-        {% for post in posts %}
+    {% for post in posts %}
+        <div class="container">
             {% if post.content_type == "TICKET" %}
                 {% include "review/partials/ticket_snippet.html" with ticket=post %}
             {% endif %}
@@ -26,13 +25,14 @@
             {% if post.content_type == "REVIEW" %}
                 {% include "review/partials/review_snippet.html" with review=post %}
             {% endif %}
-        {% endfor %}
-    </section>
-
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
+        </div>
     {% endfor %}
-{% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
 </div>
 {% endblock %}

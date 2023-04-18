@@ -10,29 +10,31 @@
     <h2>Vos posts</h2>
 
     {% for post in posts %}
-    <div>
-        {% if post.content_type == "TICKET" %}
-            {% include "review/partials/ticket_snippet.html" with ticket=post %}
-            <a href="{% url 'update-ticket' post.id %}">
-                <button>Modifier</button>
-            </a>
-            <a href="{% url 'delete-ticket' post.id %}">
-                <button>Supprimer</button>
-            </a>
-        {% endif %}
+        <div class="container">
+            {% if post.content_type == "TICKET" %}
+                {% include "review/partials/ticket_snippet.html" with ticket=post %}
+                <div class="container-buttons">
+                    <a href="{% url 'update-ticket' post.id %}">
+                        <button>Modifier</button>
+                    </a>
+                    <a href="{% url 'delete-ticket' post.id %}">
+                        <button>Supprimer</button>
+                    </a>
+                </div>
+            {% endif %}
 
-        {% if post.content_type == "REVIEW" %}
-            {% include "review/partials/review_snippet.html" with review=post %}
-            <a href="{% url 'update-review' post.id %}">
-                <button>Modifier</button>
-            </a>
-            <a href="{% url 'delete-review' post.id %}">
-                <button>Supprimer</button>
-            </a>
-        {% endif %}
-    </div>
-
+            {% if post.content_type == "REVIEW" %}
+                {% include "review/partials/review_snippet.html" with review=post %}
+                <div class="container-buttons">
+                    <a href="{% url 'update-review' post.id %}">
+                        <button>Modifier</button>
+                    </a>
+                    <a href="{% url 'delete-review' post.id %}">
+                        <button>Supprimer</button>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
     {% endfor %}
-
 </div>
 {% endblock %}

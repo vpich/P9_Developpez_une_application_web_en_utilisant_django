@@ -1,18 +1,25 @@
-<div>
-    {% if request.user == ticket.user %}
-        <p>Vous avez demandé une critique</p>
-    {% else %}
-        <p>{{ ticket.user }} a demandé une critique</p>
-    {% endif %}
-    <p>{{ ticket.time_created }}</p>
-    <a href="{% url 'ticket-detail' ticket.id %}">
-        <h2>{{ ticket.title }}</h2>
-    </a>
+<div id="ticket">
+    <div id="ticket-content">
+        {% if request.user == ticket.user %}
+            <p>Vous avez demandé une critique</p>
+        {% else %}
+            <p>{{ ticket.user }} a demandé une critique</p>
+        {% endif %}
 
-    <p>{{ ticket.description }}</p>
-    {% if ticket.image %}
-        <img src="{{ ticket.image.url }}">
-    {% endif %}
+        <h3>{{ ticket.title }}</h3>
+
+        <p>{{ ticket.description }}</p>
+        {% if ticket.image %}
+            <img src="{{ ticket.image.url }}">
+        {% endif %}
+    </div>
+
+    <div id="ticket-date">
+        <p>{{ ticket.time_created }}</p>
+    </div>
+</div>
+
+<div id="ticket-buttons">
     <a href="{% url 'create-review-response' ticket.id %}">
         <button>Créer une critique</button>
     </a>

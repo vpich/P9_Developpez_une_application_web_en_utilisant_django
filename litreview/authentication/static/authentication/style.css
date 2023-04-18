@@ -8,7 +8,10 @@ header {
 }
 header h1 {
   width: 100%;
-  position: fixed;
+  position: absolute;
+}
+header nav {
+  z-index: 4;
 }
 
 #main-container {
@@ -27,17 +30,41 @@ header h1 {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-#feed section {
-  display: flex;
-  flex-direction: column;
-}
-#feed section .container {
+#feed .container {
   border: solid;
   margin: 3px;
 }
+#feed #review-date, #feed #ticket-date {
+  width: 30%;
+}
+#feed #responded-ticket {
+  width: auto;
+}
 
-#review-content {
+#review {
   display: flex;
+}
+#review-content {
+  flex-direction: column;
+}
+#review-date {
+  text-align: right;
+}
+
+#ticket {
+  display: flex;
+}
+#ticket-content {
+  flex-direction: column;
+}
+#ticket-date {
+  text-align: right;
+}
+#ticket-buttons {
+  text-align: right;
+}
+#ticket-buttons button {
+  margin: 5px;
 }
 
 #responded-ticket {
@@ -57,16 +84,25 @@ header h1 {
   display: none;
 }
 
-#posts div {
+#posts h2 {
+  text-align: center;
+}
+#posts .container {
   border: solid;
+  margin: 3px;
 }
-#posts div div {
-  border: none;
+#posts .container-buttons {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  text-align: right;
 }
-#posts div div div {
-  border: solid;
+#posts #review-date, #posts #ticket-date {
+  width: 30%;
 }
-#posts div div button {
+#posts #responded-ticket {
+  width: auto;
+}
+#posts #ticket-buttons {
   display: none;
 }
 

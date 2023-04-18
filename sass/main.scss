@@ -7,7 +7,10 @@ header {
     justify-content: right;
     h1 {
         width: 100%;
-        position: fixed;
+        position: absolute;
+    }
+    nav {
+        z-index: 4;
     }
 }
 
@@ -28,21 +31,45 @@ header {
         margin-top: 10px;
         margin-bottom: 10px;
     }
-    section {
-        display: flex;
-        flex-direction: column;
-        .container {
-            border: solid;
-            margin: 3px;
-        }
+    .container {
+        border: solid;
+        margin: 3px;
+    }
+
+    #review-date, #ticket-date {
+        width: 30%;
+    }
+
+    #responded-ticket {
+        width: auto;
     }
 }
 
 #review {
-        &-content {
-            display: flex;
+    display: flex;
+    &-content {
+        flex-direction: column;
+    }
+    &-date {
+        text-align: right;
+    }
+}
+
+#ticket {
+    display: flex;
+    &-content {
+            flex-direction: column;
+        }
+    &-date {
+        text-align: right;
+        }
+    &-buttons {
+        text-align: right;
+        button {
+            margin: 5px;
         }
     }
+}
 
 #responded-ticket {
     border: solid;
@@ -63,17 +90,28 @@ header {
 }
 
 #posts {
-    div {
+    h2 {
+        text-align: center;
+    }
+    .container {
         border: solid;
-        div {
-        border: none;
-        div {
-            border: solid;
+        margin: 3px;
+        &-buttons {
+            margin-top: 3px;
+            margin-bottom: 3px;
+            text-align: right;
         }
-            button {
-                display: none;
-            }
-        }
+    }
+
+    #review-date, #ticket-date {
+        width: 30%;
+    }
+
+    #responded-ticket {
+        width: auto;
+    }
+    #ticket-buttons {
+        display: none;
     }
 }
 

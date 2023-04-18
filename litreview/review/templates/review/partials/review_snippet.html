@@ -1,46 +1,40 @@
-<div class="container">
-    <div id="review">
-        <div id="review-content">
-            {% if request.user == review.user %}
-                <p>Vous avez publié une critique</p>
-            {% else %}
-                <p>{{ review.user }} a publié une critique</p>
+<div id="review">
+    <div id="review-content">
+        {% if request.user == review.user %}
+            <p>Vous avez publié une critique</p>
+        {% else %}
+            <p>{{ review.user }} a publié une critique</p>
+        {% endif %}
+        <h3>{{ review.headline }} -
+            {% if review.rating == 1 %}
+                &#x2605;&#x2606;&#x2606;&#x2606;&#x2606;
             {% endif %}
-            <h3>{{ review.headline }} -
-                {% if review.rating == 1 %}
-                    &#x2605;&#x2606;&#x2606;&#x2606;&#x2606;
-                {% endif %}
-                {% if review.rating == 2 %}
-                    &#x2605;&#x2605;&#x2606;&#x2606;&#x2606;
-                {% endif %}
-                {% if review.rating == 3 %}
-                    &#x2605;&#x2605;&#x2605;&#x2606;&#x2606;
-                {% endif %}
-                {% if review.rating == 4 %}
-                    &#x2605;&#x2605;&#x2605;&#x2605;&#x2606;
-                {% endif %}
-                {% if review.rating == 5 %}
-                    &#x2605;&#x2605;&#x2605;&#x2605;&#x2605;
-                {% endif %}
-            </h3>
-            <p>{{ review.body }}</p>
-        </div>
-
-
-        <div id="review-date">
-            <p>{{ review.time_created }}</p>
-        </div>
+            {% if review.rating == 2 %}
+                &#x2605;&#x2605;&#x2606;&#x2606;&#x2606;
+            {% endif %}
+            {% if review.rating == 3 %}
+                &#x2605;&#x2605;&#x2605;&#x2606;&#x2606;
+            {% endif %}
+            {% if review.rating == 4 %}
+                &#x2605;&#x2605;&#x2605;&#x2605;&#x2606;
+            {% endif %}
+            {% if review.rating == 5 %}
+                &#x2605;&#x2605;&#x2605;&#x2605;&#x2605;
+            {% endif %}
+        </h3>
+        <p>{{ review.body }}</p>
     </div>
 
-    <p>{{ review.body }}</p>
 
-    {% if review.ticket %}
-        <div id="responded-ticket">
-            <p>Ticket - {{ review.ticket.user }}</p>
-            <p>{{ review.ticket.title }}</p>
-            {% if review.ticket.image %}
-                <img src="{{ review.ticket.image.url }}">
-            {% endif %}
-        </div>
+    <div id="review-date">
+        <p>{{ review.time_created }}</p>
+    </div>
+</div>
+
+<div id="responded-ticket">
+    <p>Ticket - {{ review.ticket.user }}</p>
+    <p>{{ review.ticket.title }}</p>
+    {% if review.ticket.image %}
+        <img src="{{ review.ticket.image.url }}">
     {% endif %}
 </div>
