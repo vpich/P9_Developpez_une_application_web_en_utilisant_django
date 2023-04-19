@@ -19,8 +19,10 @@
     </div>
 </div>
 
+{% if ticket.id not in tickets_responded %}
 <div id="ticket-buttons">
     <form action="{% url 'create-review-response' ticket.id %}">
         <button>Créer une critique</button>
     </form>
 </div>
+{% endif %}

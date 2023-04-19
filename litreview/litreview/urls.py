@@ -20,23 +20,19 @@ import authentication.views
 import review.views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("", authentication.views.LoginPageView.as_view(), name="login"),
+    path("", authentication.views.LoginPageView.as_view()),
+    path("login/", authentication.views.LoginPageView.as_view(), name="login"),
     path("signup/", authentication.views.SignupPage.as_view(), name="signup"),
     path("logout/", authentication.views.logout_user, name="logout"),
-    # path("home/", review.views.home, name="home"),
     path("feed/", review.views.Feed.as_view(), name="feed"),
     path("posts/", review.views.PostsPage.as_view(), name="posts"),
     path("ticket/create/", review.views.CreateTicket.as_view(), name="create-ticket"),
-    path("ticket/<int:ticket_id>/", review.views.TicketView.as_view(), name="ticket-detail"),
     path("ticket/<int:ticket_id>/update/", review.views.UpdateTicket.as_view(), name="update-ticket"),
     path("ticket/<int:ticket_id>/delete/", review.views.DeleteTicket.as_view(), name="delete-ticket"),
     path("review/create/", review.views.CreateReview.as_view(), name="create-review"),
     path("review/create/ticket/<int:ticket_id>/", review.views.CreateReviewResponse.as_view(), name="create-review-response"),
-    path("review/<int:review_id>/", review.views.ReviewView.as_view(), name="review-detail"),
     path("review/<int:review_id>/update/", review.views.UpdateReview.as_view(), name="update-review"),
     path("review/<int:review_id>/delete/", review.views.DeleteReview.as_view(), name="delete-review"),
-    path("follow/", review.views.FollowPage.as_view(), name="followed-users"),
-    # path("follow/", review.views.Follow.as_view(), name="follow"),
+    path("follows/", review.views.FollowPage.as_view(), name="followed-users"),
     path("follow/delete/<int:follow_id>/", review.views.DeleteFollow.as_view(), name="delete-follow"),
 ]

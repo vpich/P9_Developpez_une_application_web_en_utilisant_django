@@ -42,7 +42,9 @@ h2 {
 h3 {
     font-weight: normal;
     margin: 0px;
-    font-size: medium;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: large;
 }
 
 button {
@@ -92,19 +94,6 @@ input {
         margin-bottom: 10px;
         button {
             width: 90%;
-        }
-    }
-
-    .container {
-        border: solid 1px;
-        margin: 5px;
-        width: auto;
-    }
-
-    #review, #ticket, #responded-ticket {
-        width: auto;
-        &-buttons, &-date, &-content {
-            width: auto;
         }
     }
 }
@@ -157,10 +146,11 @@ input {
     width: auto;
 }
 
-#posts {
+#posts, #feed {
     .container {
         border: solid 1px;
-        margin: 5px;
+        margin-top: 10px;
+        margin-bottom: 10px;
         &-buttons {
             text-align: right;
             display: inline-flex;
@@ -179,6 +169,9 @@ input {
         width: auto;
         margin: 8px;
     }
+}
+
+#posts {
     #ticket-buttons {
         display: none;
     }

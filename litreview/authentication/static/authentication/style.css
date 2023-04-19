@@ -41,7 +41,9 @@ h2 {
 h3 {
   font-weight: normal;
   margin: 0px;
-  font-size: medium;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: large;
 }
 
 button {
@@ -91,17 +93,6 @@ input {
 #feed-buttons button {
   width: 90%;
 }
-#feed .container {
-  border: solid 1px;
-  margin: 5px;
-  width: auto;
-}
-#feed #review, #feed #ticket, #feed #responded-ticket {
-  width: auto;
-}
-#feed #review-buttons, #feed #review-date, #feed #review-content, #feed #ticket-buttons, #feed #ticket-date, #feed #ticket-content, #feed #responded-ticket-buttons, #feed #responded-ticket-date, #feed #responded-ticket-content {
-  width: auto;
-}
 
 #review {
   display: flex;
@@ -150,25 +141,27 @@ input {
   width: auto;
 }
 
-#posts .container {
+#posts .container, #feed .container {
   border: solid 1px;
-  margin: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
-#posts .container-buttons {
+#posts .container-buttons, #feed .container-buttons {
   text-align: right;
   display: inline-flex;
   justify-content: right;
 }
-#posts .container-buttons button {
+#posts .container-buttons button, #feed .container-buttons button {
   margin: 10px;
 }
-#posts #review-date, #posts #ticket-date {
+#posts #review-date, #posts #ticket-date, #feed #review-date, #feed #ticket-date {
   width: 30%;
 }
-#posts #responded-ticket {
+#posts #responded-ticket, #feed #responded-ticket {
   width: auto;
   margin: 8px;
 }
+
 #posts #ticket-buttons {
   display: none;
 }

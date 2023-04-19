@@ -5,11 +5,6 @@ from . import models
 
 
 class TicketForm(forms.ModelForm):
-    image = forms.FileField(widget=forms.FileInput(attrs={
-        "class": "test",
-        }
-    ))
-
     class Meta:
         model = models.Ticket
         fields = ["title",
@@ -34,12 +29,6 @@ class ReviewForm(forms.ModelForm):
             "headline": "Titre",
             "body": "Commentaire"
         }
-
-
-class UserFollowsForm(forms.ModelForm):
-    class Meta:
-        model = models.UserFollows
-        fields = ["followed_user", ]
 
 
 class FollowForm(forms.Form):

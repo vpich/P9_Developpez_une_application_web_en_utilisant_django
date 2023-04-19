@@ -1,9 +1,7 @@
 from itertools import chain
-from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import CharField, Value, Q
 
@@ -11,7 +9,19 @@ from authentication.models import User
 from . import forms, models
 
 
-class Feed(View):
+def owner_permission(request, element):
+    if request.user != element.user:
+        raise ValueError("Vous ne pouvez pas modifier/supprimer un objet dont vous n'êtes pas le créateur.")
+
+
+def ticket_already_responded(ticket):
+    if models.Review.objects.filter(ticket=ticket):
+        raise ValueError("Ce ticket à déjà eu une réponse")
+
+
+class Feed(LoginRequiredMixin, View):
+    login_url = "/login/"
+
     def get(self, request):
 
         follows = models.UserFollows.objects.filter(user=request.user.id)
@@ -35,12 +45,20 @@ class Feed(View):
             reverse=True
         )
 
+        tickets_responded = []
+        for ticket in tickets:
+            all_reviews = models.Review.objects.filter(ticket=ticket)
+            if all_reviews:
+                tickets_responded.append(ticket.id)
+
         return render(request,
                       "review/feed.html",
-                      {"posts": posts})
+                      {"posts": posts,
+                       "tickets_responded": tickets_responded})
 
 
-class PostsPage(View):
+class PostsPage(LoginRequiredMixin, View):
+    login_url = "/login/"
     ticket_form = models.Ticket
     review_form = models.Review
 
@@ -61,72 +79,9 @@ class PostsPage(View):
                       "review/posts.html",
                       {"posts": posts})
 
-# def feed(request, feed_type):
-#     tickets = models.Ticket.objects.filter(title__exact='')
-#     reviews = models.Review.objects.filter(headline__exact='')
-#     if feed_type == 1:
-#         follows = models.UserFollows.objects.filter(user=request.user.id)
-#         tickets = models.Ticket.objects.filter(
-#             user__in=follows.values("followed_user")
-#         )
-#
-#         reviews = models.Review.objects.filter(
-#             user__in=follows.values("followed_user")
-#         )
-#
-#     elif feed_type == 2:
-#         tickets = models.Ticket.objects.filter(user=request.user.id)
-#
-#     elif feed_type == 3:
-#         own_tickets = models.Ticket.objects.filter(user=request.user.id)
-#         reviews = models.Review.objects.filter(ticket__in=own_tickets)
-#
-#     tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
-#     reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
-#
-#     posts = sorted(
-#         chain(tickets, reviews),
-#         key=lambda post: post.time_created,
-#         reverse=True
-#     )
-#
-#     return posts
 
-# class LoginRequiredMixin(object):
-#     @method_decorator(login_required)
-#     def dispatch(self, *args, **kwargs):
-#         return super(LoginRequiredMixin, self).dispatch(*args, **kwargs)
-
-
-# class Home(View):
-#     def get(self, request):
-#         return render(request,
-#                       "review/home.html")
-#
-#     def post(self, request):
-#         logout_user(request)
-#         return redirect("login")
-
-# @login_required(login_url="login")
-# def home(request):
-#     posts_followed = feed(request, 1)
-#     own_tickets = feed(request, 2)
-#     tickets_responded = feed(request, 3)
-#
-#     print(request.user.id)
-#
-#     context = {
-#         "posts_followed": posts_followed,
-#         "own_tickets": own_tickets,
-#         "tickets_responded": tickets_responded,
-#     }
-#
-#     return render(request,
-#                   "review/home.html",
-#                   context)
-
-
-class CreateTicket(View):
+class CreateTicket(LoginRequiredMixin, View):
+    login_url = "/login/"
     form = forms.TicketForm
 
     def get(self, request):
@@ -141,23 +96,17 @@ class CreateTicket(View):
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
-            return redirect("ticket-detail", ticket.id)
+            return redirect("feed")
         return redirect("create-ticket")
 
 
-class TicketView(View):
-    def get(self, request, ticket_id):
-        ticket = get_object_or_404(models.Ticket, id=ticket_id)
-        return render(request,
-                      "review/ticket_detail.html",
-                      {"ticket": ticket})
-
-
-class UpdateTicket(View):
+class UpdateTicket(LoginRequiredMixin, View):
+    login_url = "/login/"
     form = forms.TicketForm
 
     def get(self, request, ticket_id):
         ticket = get_object_or_404(models.Ticket, id=ticket_id)
+        owner_permission(request, ticket)
         form = self.form(instance=ticket)
         return render(request,
                       "review/update_ticket.html",
@@ -171,13 +120,16 @@ class UpdateTicket(View):
             ticket.description = form.cleaned_data["description"]
             ticket.image = form.cleaned_data["image"]
             ticket.save()
-            return redirect("ticket-detail", ticket_id)
+            return redirect("posts")
         return redirect("update-ticket", ticket_id)
 
 
-class DeleteTicket(View):
+class DeleteTicket(LoginRequiredMixin, View):
+    login_url = "/login/"
+
     def get(self, request, ticket_id):
         ticket = get_object_or_404(models.Ticket, id=ticket_id)
+        owner_permission(request, ticket)
         return render(request,
                       "review/delete_ticket.html",
                       {"ticket": ticket})
@@ -188,7 +140,8 @@ class DeleteTicket(View):
         return redirect("feed")
 
 
-class CreateReview(View):
+class CreateReview(LoginRequiredMixin, View):
+    login_url = "/login/"
     review_form = forms.ReviewForm
     ticket_form = forms.TicketForm
 
@@ -211,17 +164,19 @@ class CreateReview(View):
             review.user = request.user
             review.ticket = ticket
             review.save()
-            return redirect("review-detail", review.id)
+            return redirect("feed")
         return redirect("create-review")
 
 
-class CreateReviewResponse(View):
+class CreateReviewResponse(LoginRequiredMixin, View):
+    login_url = "/login/"
     form = forms.ReviewForm
     model = models.Ticket
 
     def get(self, request, ticket_id):
         form = self.form()
         ticket = self.model.objects.get(id=ticket_id)
+        ticket_already_responded(ticket)
         return render(request,
                       "review/create_review_response.html",
                       {"form": form,
@@ -235,23 +190,17 @@ class CreateReviewResponse(View):
             review.user = request.user
             review.ticket = ticket
             review.save()
-            return redirect("review-detail", review.id)
+            return redirect("feed")
         return redirect("create-review-response")
 
 
-class ReviewView(View):
-    def get(self, request, review_id):
-        review = get_object_or_404(models.Review, id=review_id)
-        return render(request,
-                      "review/review_detail.html",
-                      {"review": review})
-
-
-class UpdateReview(View):
+class UpdateReview(LoginRequiredMixin, View):
+    login_url = "/login/"
     form = forms.ReviewForm
 
     def get(self, request, review_id):
         review = get_object_or_404(models.Review, id=review_id)
+        owner_permission(request, review)
         form = self.form(instance=review)
         return render(request,
                       "review/update_review.html",
@@ -267,13 +216,16 @@ class UpdateReview(View):
             review.headline = form.cleaned_data["headline"]
             review.body = form.cleaned_data["body"]
             review.save()
-            return redirect("review-detail", review_id)
+            return redirect("posts")
         return redirect("update-review", review_id)
 
 
-class DeleteReview(View):
+class DeleteReview(LoginRequiredMixin, View):
+    login_url = "/login/"
+
     def get(self, request, review_id):
         review = get_object_or_404(models.Review, id=review_id)
+        owner_permission(request, review)
         return render(request,
                       "review/delete_review.html",
                       {"review": review})
@@ -284,17 +236,8 @@ class DeleteReview(View):
         return redirect("feed")
 
 
-# class FollowedUsersPage(View):
-#     def get(self, request):
-#         follows = models.UserFollows.objects.all()
-#
-#         return render(request,
-#                       "review/followed_users.html",
-#                       {"follows": follows})
-
-
-class FollowPage(View):
-    # form = forms.UserFollowsForm
+class FollowPage(LoginRequiredMixin, View):
+    login_url = "/login/"
     form = forms.FollowForm
 
     def get(self, request):
@@ -303,7 +246,7 @@ class FollowPage(View):
         followers = models.UserFollows.objects.filter(followed_user=request.user)
 
         return render(request,
-                      "review/followed_users.html",
+                      "review/follows.html",
                       {"follows": follows,
                        "form": form,
                        "followers": followers,
@@ -314,7 +257,6 @@ class FollowPage(View):
         form = self.form(request.POST)
         if form.is_valid():
             follow = models.UserFollows()
-            # follow = form.save(commit=False)
             follow.user = request.user
             followed_name = form.cleaned_data["followed_name"]
             try:
@@ -327,37 +269,20 @@ class FollowPage(View):
         followers = models.UserFollows.objects.filter(followed_user=request.user)
 
         return render(request,
-                      "review/followed_users.html",
+                      "review/follows.html",
                       {"follows": follows,
                        "form": form,
                        "followers": followers,
                        "errors": errors})
 
 
-# class Follow(View):
-#     form = forms.UserFollowsForm
-#
-#     def get(self, request):
-#         form = self.form()
-#         return render(request,
-#                       "review/follow.html",
-#                       {"form": form})
-#
-#     def post(self, request):
-#         form = self.form(request.POST)
-#         if form.is_valid():
-#             follow = form.save(commit=False)
-#             follow.user = request.user
-#             follow.save()
-#             return redirect("followed-users")
-#         return redirect("follow")
-
-
-class DeleteFollow(View):
+class DeleteFollow(LoginRequiredMixin, View):
+    login_url = "/login/"
     model = models.UserFollows
 
     def get(self, request, follow_id):
         follow = self.model.objects.get(id=follow_id)
+        owner_permission(request, follow)
 
         return render(request,
                       "review/delete_follow.html",
