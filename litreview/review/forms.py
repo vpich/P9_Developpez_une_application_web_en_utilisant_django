@@ -1,9 +1,15 @@
 from django import forms
+from django.forms.widgets import FileInput
 
 from . import models
 
 
 class TicketForm(forms.ModelForm):
+    image = forms.FileField(widget=forms.FileInput(attrs={
+        "class": "test",
+        }
+    ))
+
     class Meta:
         model = models.Ticket
         fields = ["title",

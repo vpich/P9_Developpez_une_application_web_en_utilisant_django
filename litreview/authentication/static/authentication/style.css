@@ -11,13 +11,62 @@ header h1 {
   position: absolute;
 }
 header nav {
+  margin: 10px;
   z-index: 4;
+}
+header nav a {
+  text-decoration: none;
+  color: black;
+  font-size: x-small;
+  margin: 5px;
+}
+
+body {
+  height: 90vh;
+  font-family: sans-serif;
+}
+
+h1 {
+  font-weight: normal;
+  font-size: medium;
 }
 
 h2 {
   text-align: center;
+  margin: 20px;
+  font-weight: normal;
+  font-size: large;
+}
+
+h3 {
+  font-weight: normal;
   margin: 0px;
+  font-size: medium;
+}
+
+button {
+  border-radius: 5px;
+  padding: 5px;
+  border: solid 1px;
+  background: white;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-top: 10px;
   margin-bottom: 10px;
+}
+button:hover {
+  filter: contrast(0.5);
+  cursor: pointer;
+}
+button:active {
+  filter: brightness(0.5);
+}
+
+input {
+  text-align: center;
+  width: 90%;
+  height: 25px;
+  border: solid 1px;
 }
 
 #main-container {
@@ -26,25 +75,31 @@ h2 {
   border-top: none;
   justify-content: center;
   padding: 10px;
+  height: inherit;
 }
 #main-container div {
   width: 60vw;
 }
 
 #feed-buttons {
-  display: flex;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+#feed-buttons button {
+  width: 90%;
 }
 #feed .container {
   border: solid 1px;
   margin: 5px;
+  width: auto;
 }
-#feed #review-date, #feed #ticket-date {
-  width: 30%;
+#feed #review, #feed #ticket, #feed #responded-ticket {
+  width: auto;
 }
-#feed #responded-ticket {
+#feed #review-buttons, #feed #review-date, #feed #review-content, #feed #ticket-buttons, #feed #ticket-date, #feed #ticket-content, #feed #responded-ticket-buttons, #feed #responded-ticket-date, #feed #responded-ticket-content {
   width: auto;
 }
 
@@ -53,9 +108,16 @@ h2 {
 }
 #review-content {
   flex-direction: column;
+  width: 70%;
+}
+#review-content p {
+  margin: 5px;
+  margin-left: 0px;
 }
 #review-date {
-  text-align: right;
+  width: 30%;
+  font-size: x-small;
+  text-align: center;
 }
 
 #ticket {
@@ -63,20 +125,28 @@ h2 {
 }
 #ticket-content {
   flex-direction: column;
+  width: 70%;
+}
+#ticket-content p {
+  margin: 5px;
+  margin-left: 0px;
 }
 #ticket-date {
-  text-align: right;
+  width: 30%;
+  font-size: x-small;
+  text-align: center;
 }
 #ticket-buttons {
   text-align: right;
 }
 #ticket-buttons button {
-  margin: 5px;
+  margin: 15px;
+  padding: 10px;
 }
 
 #responded-ticket {
   border: solid 1px;
-  margin: 5px;
+  margin: 8px;
   width: auto;
 }
 
@@ -85,25 +155,27 @@ h2 {
   margin: 5px;
 }
 #posts .container-buttons {
-  margin-top: 5px;
-  margin-bottom: 3px;
   text-align: right;
   display: inline-flex;
   justify-content: right;
 }
 #posts .container-buttons button {
-  margin: 5px;
+  margin: 10px;
 }
 #posts #review-date, #posts #ticket-date {
   width: 30%;
 }
 #posts #responded-ticket {
   width: auto;
+  margin: 8px;
 }
 #posts #ticket-buttons {
   display: none;
 }
 
+#follow {
+  width: 90%;
+}
 #followed {
   display: grid;
   grid-template-columns: 3fr 1fr;
@@ -118,6 +190,14 @@ h2 {
 #followed a {
   text-align: center;
   padding: 5px;
+  text-decoration: none;
+  color: black;
+}
+#followed a:hover {
+  backdrop-filter: contrast(0.5);
+}
+#followed a:active {
+  filter: brightness(0.5);
 }
 #followers p {
   margin: auto;
@@ -151,42 +231,70 @@ h2 {
 #signup form p label {
   display: none;
 }
-#signup input {
-  text-align: center;
-  width: 100%;
-}
 #signup button {
   float: right;
-  margin: 5px;
+  margin-left: 10px;
 }
 
 .error {
   color: red;
 }
 
-#login, #login-signup {
+#login {
+  display: flex;
   text-align: center;
+  width: 90%;
+  padding: 10%;
 }
-#login form p label, #login-signup form p label {
+#login form p label {
   display: none;
 }
-#login form button, #login-signup form button {
+#login form button {
   float: right;
 }
-#login input, #login-signup input {
-  text-align: center;
+#login-form h2 {
+  margin-top: 0px;
+  margin-bottom: 50px;
 }
 
-#create-ticket form p, #edit-ticket form p {
+#create-ticket form p, #edit-ticket form p, #create-review-response-ticket form p, #edit-review-ticket form p, #create-review-ticket form p {
   display: grid;
 }
-#create-ticket button, #edit-ticket button {
+#create-ticket form p label, #edit-ticket form p label, #create-review-response-ticket form p label, #edit-review-ticket form p label, #create-review-ticket form p label {
+  margin-bottom: 15px;
+}
+#create-ticket button, #edit-ticket button, #create-review-response-ticket button, #edit-review-ticket button, #create-review-ticket button {
   float: right;
 }
-
-#create-review-response h3, #edit-review h3, #create-review h3 {
-  margin: 0px;
+#create-ticket #id_title, #edit-ticket #id_title, #create-review-response-ticket #id_title, #edit-review-ticket #id_title, #create-review-ticket #id_title {
+  justify-self: center;
+  width: 100%;
 }
+#create-ticket textarea, #edit-ticket textarea, #create-review-response-ticket textarea, #edit-review-ticket textarea, #create-review-ticket textarea {
+  border: solid 1px;
+  width: 100%;
+  justify-self: center;
+  resize: none;
+}
+#create-ticket #id_image, #edit-ticket #id_image, #create-review-response-ticket #id_image, #edit-review-ticket #id_image, #create-review-ticket #id_image {
+  width: 141px;
+  height: 27px;
+  z-index: 4;
+  opacity: 0;
+}
+#create-ticket #id_image:hover, #edit-ticket #id_image:hover, #create-review-response-ticket #id_image:hover, #edit-review-ticket #id_image:hover, #create-review-ticket #id_image:hover {
+  box-sizing: border-box;
+  border: solid 15px;
+  border-radius: 5px;
+  opacity: 30%;
+}
+#create-ticket #upload-button, #edit-ticket #upload-button, #create-review-response-ticket #upload-button, #edit-review-ticket #upload-button, #create-review-ticket #upload-button {
+  z-index: 1;
+  position: relative;
+  bottom: 55px;
+  float: left;
+}
+
 #create-review-response-ticket, #edit-review-ticket, #create-review-ticket {
   border: solid 1px;
 }
@@ -194,12 +302,14 @@ h2 {
   display: grid;
   margin: 10px;
 }
-#create-review-response-ticket #ticket, #edit-review-ticket #ticket, #create-review-ticket #ticket {
-  border: solid 1px;
-  margin: 10px;
-  width: auto;
+#create-review-response-ticket #upload-button, #edit-review-ticket #upload-button, #create-review-ticket #upload-button {
+  z-index: 1;
+  position: relative;
+  bottom: 47px;
+  left: 10px;
+  float: left;
 }
-#create-review-response-ticket #ticket-buttons, #edit-review-ticket #ticket-buttons, #create-review-ticket #ticket-buttons {
+#create-review-response-ticket #upload-button #ticket-buttons, #edit-review-ticket #upload-button #ticket-buttons, #create-review-ticket #upload-button #ticket-buttons {
   display: none;
 }
 #create-review-response-review, #edit-review-review, #create-review-review {
