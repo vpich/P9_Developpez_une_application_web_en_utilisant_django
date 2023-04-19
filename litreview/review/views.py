@@ -4,6 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.db.models import CharField, Value, Q
+from django.core.paginator import Paginator
+
 
 from authentication.models import User
 from . import forms, models
@@ -45,6 +47,11 @@ class Feed(LoginRequiredMixin, View):
             reverse=True
         )
 
+        paginator = Paginator(posts, 5)
+
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
         tickets_responded = []
         for ticket in tickets:
             all_reviews = models.Review.objects.filter(ticket=ticket)
@@ -53,7 +60,7 @@ class Feed(LoginRequiredMixin, View):
 
         return render(request,
                       "review/feed.html",
-                      {"posts": posts,
+                      {"page_obj": page_obj,
                        "tickets_responded": tickets_responded})
 
 
@@ -75,9 +82,14 @@ class PostsPage(LoginRequiredMixin, View):
             reverse=True,
         )
 
+        paginator = Paginator(posts, 5)
+
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
         return render(request,
                       "review/posts.html",
-                      {"posts": posts})
+                      {"page_obj": page_obj})
 
 
 class CreateTicket(LoginRequiredMixin, View):

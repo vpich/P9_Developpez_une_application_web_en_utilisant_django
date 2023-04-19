@@ -46,6 +46,10 @@ h3 {
   font-size: large;
 }
 
+#paginator {
+  text-align: center;
+}
+
 button {
   border-radius: 5px;
   padding: 5px;
@@ -78,6 +82,8 @@ input {
   justify-content: center;
   padding: 10px;
   height: inherit;
+  overflow: scroll;
+  overflow-x: hidden;
 }
 #main-container div {
   width: 60vw;
