@@ -51,6 +51,10 @@ h3 {
     text-align: center;
 }
 
+image {
+    margin: 15px;
+}
+
 button {
     border-radius: 5px;
     padding: 5px;
@@ -275,7 +279,7 @@ input {
     }
 }
 
-#create-ticket, #edit-ticket, #create-review-response-ticket, #edit-review-ticket, #create-review-ticket {
+#create-ticket, #edit-ticket {
     form p {
         display: grid;
         label {
@@ -319,38 +323,87 @@ input {
 }
 
 #create-review-response, #edit-review, #create-review {
+    h4 {
+        margin-top: 5px;
+        font-size: medium;
+        font-weight: normal;
+    }
     &-ticket {
         border: solid 1px;
-        p {
-            display: grid;
-            margin: 10px;
+        #ticket {
+            border: solid 1px;
+            margin: 20px;
+            width: auto;
+            &-content {
+                width: 70%;
+            }
+            &-date {
+                width: 30%;
+            }
         }
-        #upload-button {
-        z-index: 1;
-        position: relative;
-        bottom: 47px;
-        left: 10px;
-        float: left;
+    }
 
-        #ticket-buttons {
-            display: none;
-        }
-    }
-    }
 
     &-review {
         border: solid 1px;
         padding-bottom: 40px;
-        p {
-            display: grid;
-            margin: 10px;
-        }
         button {
             float: right;
             margin: 5px;
         }
     }
-    #id_rating {
-        display: flex;
+
+    form {
+        p {
+            margin: 0px;
+            display: grid;
+        }
+        padding: 15px;
+        #id_rating {
+            display: flex;
+            width: 70%;
+            justify-content: space-between;
+            div {
+                width: auto;
+            }
+            label {
+                display: inline-flex;
+                align-items: center;
+            }
+            input {
+                margin-right: 10px;
+                margin-left: 10px;
+            }
+        }
+        input {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            justify-self: center;
+            width: 100%;
+        }
+
+        #id_body {
+            height: 120px;
+            text-align: start;
+        }
+    }
+}
+
+#create-review {
+ form {
+    padding: 0px;
+ }
+}
+
+#create-review-response-ticket {
+    #upload-button {
+        display: none;
+    }
+}
+
+.delete {
+    align-self: center;
+    form {
+        float: right;
     }
 }

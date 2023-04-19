@@ -50,6 +50,10 @@ h3 {
   text-align: center;
 }
 
+image {
+  margin: 15px;
+}
+
 button {
   border-radius: 5px;
   padding: 5px;
@@ -256,75 +260,118 @@ input {
   margin-bottom: 50px;
 }
 
-#create-ticket form p, #edit-ticket form p, #create-review-response-ticket form p, #edit-review-ticket form p, #create-review-ticket form p {
+#create-ticket form p, #edit-ticket form p {
   display: grid;
 }
-#create-ticket form p label, #edit-ticket form p label, #create-review-response-ticket form p label, #edit-review-ticket form p label, #create-review-ticket form p label {
+#create-ticket form p label, #edit-ticket form p label {
   margin-bottom: 15px;
 }
-#create-ticket button, #edit-ticket button, #create-review-response-ticket button, #edit-review-ticket button, #create-review-ticket button {
+#create-ticket button, #edit-ticket button {
   float: right;
 }
-#create-ticket #id_title, #edit-ticket #id_title, #create-review-response-ticket #id_title, #edit-review-ticket #id_title, #create-review-ticket #id_title {
+#create-ticket #id_title, #edit-ticket #id_title {
   justify-self: center;
   width: 100%;
 }
-#create-ticket textarea, #edit-ticket textarea, #create-review-response-ticket textarea, #edit-review-ticket textarea, #create-review-ticket textarea {
+#create-ticket textarea, #edit-ticket textarea {
   border: solid 1px;
   width: 100%;
   justify-self: center;
   resize: none;
 }
-#create-ticket #id_image, #edit-ticket #id_image, #create-review-response-ticket #id_image, #edit-review-ticket #id_image, #create-review-ticket #id_image {
+#create-ticket #id_image, #edit-ticket #id_image {
   width: 141px;
   height: 27px;
   z-index: 4;
   opacity: 0;
 }
-#create-ticket #id_image:hover, #edit-ticket #id_image:hover, #create-review-response-ticket #id_image:hover, #edit-review-ticket #id_image:hover, #create-review-ticket #id_image:hover {
+#create-ticket #id_image:hover, #edit-ticket #id_image:hover {
   box-sizing: border-box;
   border: solid 15px;
   border-radius: 5px;
   opacity: 30%;
 }
-#create-ticket #upload-button, #edit-ticket #upload-button, #create-review-response-ticket #upload-button, #edit-review-ticket #upload-button, #create-review-ticket #upload-button {
+#create-ticket #upload-button, #edit-ticket #upload-button {
   z-index: 1;
   position: relative;
   bottom: 55px;
   float: left;
 }
 
+#create-review-response h4, #edit-review h4, #create-review h4 {
+  margin-top: 5px;
+  font-size: medium;
+  font-weight: normal;
+}
 #create-review-response-ticket, #edit-review-ticket, #create-review-ticket {
   border: solid 1px;
 }
-#create-review-response-ticket p, #edit-review-ticket p, #create-review-ticket p {
-  display: grid;
-  margin: 10px;
+#create-review-response-ticket #ticket, #edit-review-ticket #ticket, #create-review-ticket #ticket {
+  border: solid 1px;
+  margin: 20px;
+  width: auto;
 }
-#create-review-response-ticket #upload-button, #edit-review-ticket #upload-button, #create-review-ticket #upload-button {
-  z-index: 1;
-  position: relative;
-  bottom: 47px;
-  left: 10px;
-  float: left;
+#create-review-response-ticket #ticket-content, #edit-review-ticket #ticket-content, #create-review-ticket #ticket-content {
+  width: 70%;
 }
-#create-review-response-ticket #upload-button #ticket-buttons, #edit-review-ticket #upload-button #ticket-buttons, #create-review-ticket #upload-button #ticket-buttons {
-  display: none;
+#create-review-response-ticket #ticket-date, #edit-review-ticket #ticket-date, #create-review-ticket #ticket-date {
+  width: 30%;
 }
 #create-review-response-review, #edit-review-review, #create-review-review {
   border: solid 1px;
   padding-bottom: 40px;
 }
-#create-review-response-review p, #edit-review-review p, #create-review-review p {
-  display: grid;
-  margin: 10px;
-}
 #create-review-response-review button, #edit-review-review button, #create-review-review button {
   float: right;
   margin: 5px;
 }
-#create-review-response #id_rating, #edit-review #id_rating, #create-review #id_rating {
+#create-review-response form, #edit-review form, #create-review form {
+  padding: 15px;
+}
+#create-review-response form p, #edit-review form p, #create-review form p {
+  margin: 0px;
+  display: grid;
+}
+#create-review-response form #id_rating, #edit-review form #id_rating, #create-review form #id_rating {
   display: flex;
+  width: 70%;
+  justify-content: space-between;
+}
+#create-review-response form #id_rating div, #edit-review form #id_rating div, #create-review form #id_rating div {
+  width: auto;
+}
+#create-review-response form #id_rating label, #edit-review form #id_rating label, #create-review form #id_rating label {
+  display: inline-flex;
+  align-items: center;
+}
+#create-review-response form #id_rating input, #edit-review form #id_rating input, #create-review form #id_rating input {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+#create-review-response form input, #edit-review form input, #create-review form input {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  justify-self: center;
+  width: 100%;
+}
+#create-review-response form #id_body, #edit-review form #id_body, #create-review form #id_body {
+  height: 120px;
+  text-align: start;
+}
+
+#create-review form {
+  padding: 0px;
+}
+
+#create-review-response-ticket #upload-button {
+  display: none;
+}
+
+.delete {
+  align-self: center;
+}
+.delete form {
+  float: right;
 }
 
 /*# sourceMappingURL=style.css.map */

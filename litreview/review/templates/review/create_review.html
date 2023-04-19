@@ -11,14 +11,14 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div id="create-review-ticket">
-            <h3>Livre / Article</h3>
+            <h4>Livre / Article</h4>
             {{ ticket_form.as_p }}
             <button id="upload-button">Télécharger fichier</button>
         </div>
 
 
         <div id="create-review-review">
-            <h3>Critique</h3>
+            <h4>Critique</h4>
                 {{ review_form.as_p }}
             <button type="submit" >Envoyer</button>
         </div>

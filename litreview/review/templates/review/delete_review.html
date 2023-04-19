@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <section>
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'authentication/style.css' %}" />
+{% endblock %}
+
+{% block content %}
+    <section class="delete">
         <h2>Suppression de la critique</h2>
         <p>Êtes-vous sûr de vouloir supprimer cette critique ?</p>
         <form method="post">
             {% csrf_token %}
             <button type="submit">Supprimer</button>
         </form>
+        <a href="{% url 'posts' %}">
+            <button>Retourner</button>
+        </a>
     </section>
-</body>
-</html>
+{% endblock %}
