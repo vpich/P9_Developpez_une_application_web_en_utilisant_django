@@ -356,7 +356,7 @@ input {
 
     #upload-button {
         position: relative;
-        bottom: 463px;
+        bottom: 487px;
         left: 21px;
     }
 
@@ -400,8 +400,10 @@ input {
             }
 
             #id_body {
-                height: 120px;
-                text-align: start;
+                margin-top: 10px;
+                width: 100%;
+                justify-self: center;
+                resize: none;
             }
         }
     }

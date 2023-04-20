@@ -330,7 +330,7 @@ input {
 }
 #create-review-response #upload-button, #edit-review #upload-button, #create-review #upload-button {
   position: relative;
-  bottom: 463px;
+  bottom: 487px;
   left: 21px;
 }
 #create-review-response-review, #edit-review-review, #create-review-review {
@@ -373,8 +373,10 @@ input {
   width: 100%;
 }
 #create-review-response-review #review-form #id_body, #edit-review-review #review-form #id_body, #create-review-review #review-form #id_body {
-  height: 120px;
-  text-align: start;
+  margin-top: 10px;
+  width: 100%;
+  justify-self: center;
+  resize: none;
 }
 
 #edit-ticket #upload-button {
