@@ -12,12 +12,11 @@
     <div id="create-review-response-ticket">
         <h4>Vous êtes en train de poster en réponse à</h4>
         {% include "review/partials/ticket_snippet.html" %}
-        <button id="upload-button">Télécharger fichier</button>
     </div>
 
     <div id="create-review-response-review">
         <h4>Critique</h4>
-        <form method="post" >
+        <form id="review-form" method="post" >
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" >Envoyer</button>

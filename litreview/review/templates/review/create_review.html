@@ -12,17 +12,22 @@
         {% csrf_token %}
         <div id="create-review-ticket">
             <h4>Livre / Article</h4>
-            {{ ticket_form.as_p }}
-            <button id="upload-button">Télécharger fichier</button>
+            <div id="create-review-ticket-form">
+                {{ ticket_form.as_p }}
+            </div>
         </div>
+
 
 
         <div id="create-review-review">
             <h4>Critique</h4>
+            <div id="review-form">
                 {{ review_form.as_p }}
-            <button type="submit" >Envoyer</button>
+                <button type="submit" >Envoyer</button>
+            </div>
         </div>
     </form>
+    <button id="upload-button">Télécharger fichier</button>
 
 </div>
 

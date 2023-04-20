@@ -90,7 +90,7 @@ input {
     height: inherit;
     overflow: scroll;
     overflow-x: hidden;
-    div {
+    &>div {
         width: 60vw;
     }
 }
@@ -163,7 +163,7 @@ input {
         margin-bottom: 10px;
         &-buttons {
             text-align: right;
-            display: inline-flex;
+            display: flex;
             justify-content: right;
             button {
                 margin: 10px;
@@ -259,8 +259,9 @@ input {
 #login {
     display: flex;
     text-align: center;
-    width: 90%;
-    padding: 10%;
+    padding-top: 10%;
+    width: 90vw;
+    justify-content: center;
     form {
         p label {
         display: none;
@@ -270,17 +271,20 @@ input {
         }
     }
 
+    &-form, &-signup {
+        width: 40vw;
+    }
+
     &-form {
         h2 {
             margin-top: 0px;
             margin-bottom: 50px;
         }
-
     }
 }
 
-#create-ticket, #edit-ticket {
-    form p {
+#create-ticket, #edit-ticket, #create-review-ticket {
+    &-form p {
         display: grid;
         label {
             margin-bottom: 15px;
@@ -325,6 +329,7 @@ input {
 #create-review-response, #edit-review, #create-review {
     h4 {
         margin-top: 5px;
+        margin-bottom: 0px;
         font-size: medium;
         font-weight: normal;
     }
@@ -332,7 +337,7 @@ input {
         border: solid 1px;
         #ticket {
             border: solid 1px;
-            margin: 20px;
+            margin: 15px;
             width: auto;
             &-content {
                 width: 70%;
@@ -341,6 +346,18 @@ input {
                 width: 30%;
             }
         }
+        &-form {
+            width: initial;
+            padding: 10px;
+            border: solid 1px;
+            margin: 10px;
+        }
+    }
+
+    #upload-button {
+        position: relative;
+        bottom: 463px;
+        left: 21px;
     }
 
 
@@ -351,55 +368,62 @@ input {
             float: right;
             margin: 5px;
         }
-    }
-
-    form {
-        p {
-            margin: 0px;
-            display: grid;
-        }
-        padding: 15px;
-        #id_rating {
-            display: flex;
-            width: 70%;
-            justify-content: space-between;
-            div {
-                width: auto;
+        #review-form {
+            width: auto;
+            p {
+                margin: 0px;
+                display: grid;
             }
-            label {
-                display: inline-flex;
-                align-items: center;
+            padding: 15px;
+            #id_rating {
+                display: flex;
+                width: 70%;
+                justify-content: space-between;
+                overflow: hidden;
+                div {
+                    width: auto;
+                }
+                label {
+                    display: inline-flex;
+                    align-items: center;
+                }
+                input {
+                    margin-right: 10px;
+                    margin-left: 10px;
+                }
             }
             input {
-                margin-right: 10px;
-                margin-left: 10px;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                justify-self: center;
+                width: 100%;
+            }
+
+            #id_body {
+                height: 120px;
+                text-align: start;
             }
         }
-        input {
-            margin-top: 10px;
-            margin-bottom: 10px;
-            justify-self: center;
-            width: 100%;
-        }
-
-        #id_body {
-            height: 120px;
-            text-align: start;
-        }
     }
 }
 
-#create-review {
- form {
-    padding: 0px;
- }
-}
-
-#create-review-response-ticket {
+#edit-ticket {
     #upload-button {
-        display: none;
+        bottom: 44px;
+        left: 89px;
+    }
+    form>p:last-child {
+        display: inline-block;
+        }
+    #image-clear_id {
+        height: auto;
+        width: auto;
+    }
+    #id_image {
+        position: absolute;
     }
 }
+
 
 .delete {
     align-self: center;
