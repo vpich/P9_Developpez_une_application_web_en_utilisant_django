@@ -22,7 +22,6 @@ header {
 }
 
 body {
-    height: 90vh;
     font-family: sans-serif;
 }
 
@@ -34,7 +33,6 @@ h1 {
 h2 {
     text-align: center;
     margin: 20px;
-//     margin-bottom: 10px;
     font-weight: normal;
     font-size: large;
 }
@@ -51,8 +49,10 @@ h3 {
     text-align: center;
 }
 
-image {
+img {
     margin: 15px;
+    max-width: 200px;
+    max-height: 200px;
 }
 
 button {
@@ -87,11 +87,10 @@ input {
     border-top: none;
     justify-content: center;
     padding: 10px;
-    height: inherit;
-    overflow: scroll;
-    overflow-x: hidden;
+    min-height: 80vh;
     &>div {
         width: 60vw;
+        min-width: 235px;
     }
 }
 
@@ -315,7 +314,8 @@ input {
             box-sizing: border-box;
             border: solid 15px;
             border-radius: 5px;
-            opacity: 30%,
+            opacity: 30%;
+            cursor: pointer;
         }
     }
     #upload-button {
@@ -323,6 +323,9 @@ input {
         position: relative;
         bottom: 55px;
         float: left;
+    }
+    span {
+        display: block;
     }
 }
 
@@ -410,19 +413,19 @@ input {
 }
 
 #edit-ticket {
-    #upload-button {
-        bottom: 44px;
-        left: 89px;
+    img {
+        margin-left: 0px;
     }
-    form>p:last-child {
-        display: inline-block;
-        }
-    #image-clear_id {
-        height: auto;
-        width: auto;
+    #upload-button {
+        bottom: 0px;
+    }
+    p:last-of-type {
+        display: none;
     }
     #id_image {
         position: absolute;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 }
 

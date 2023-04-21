@@ -11,9 +11,17 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Envoyer</button>
+        {% if ticket.image %}
+        <span>Image :</span>
+        <img src="{{ ticket.image.url }}">
+        {% endif %}
+        <div>
+            <input type="file" name="image" id="id_image" accept="image/*">
+            <button type="submit">Envoyer</button>
+        </div>
     </form>
-    <button id="upload-button">Télécharger fichier</button>
+
+    <button type="file" id="upload-button">Télécharger fichier</button>
 </div>
 
 {% endblock %}

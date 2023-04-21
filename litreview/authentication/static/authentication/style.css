@@ -22,7 +22,6 @@ header nav a {
 }
 
 body {
-  height: 90vh;
   font-family: sans-serif;
 }
 
@@ -50,8 +49,10 @@ h3 {
   text-align: center;
 }
 
-image {
+img {
   margin: 15px;
+  max-width: 200px;
+  max-height: 200px;
 }
 
 button {
@@ -85,12 +86,11 @@ input {
   border-top: none;
   justify-content: center;
   padding: 10px;
-  height: inherit;
-  overflow: scroll;
-  overflow-x: hidden;
+  min-height: 80vh;
 }
 #main-container > div {
   width: 60vw;
+  min-width: 235px;
 }
 
 #feed-buttons {
@@ -294,12 +294,16 @@ input {
   border: solid 15px;
   border-radius: 5px;
   opacity: 30%;
+  cursor: pointer;
 }
 #create-ticket #upload-button, #edit-ticket #upload-button, #create-review-ticket #upload-button {
   z-index: 1;
   position: relative;
   bottom: 55px;
   float: left;
+}
+#create-ticket span, #edit-ticket span, #create-review-ticket span {
+  display: block;
 }
 
 #create-review-response h4, #edit-review h4, #create-review h4 {
@@ -379,19 +383,19 @@ input {
   resize: none;
 }
 
+#edit-ticket img {
+  margin-left: 0px;
+}
 #edit-ticket #upload-button {
-  bottom: 44px;
-  left: 89px;
+  bottom: 0px;
 }
-#edit-ticket form > p:last-child {
-  display: inline-block;
-}
-#edit-ticket #image-clear_id {
-  height: auto;
-  width: auto;
+#edit-ticket p:last-of-type {
+  display: none;
 }
 #edit-ticket #id_image {
   position: absolute;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .delete {

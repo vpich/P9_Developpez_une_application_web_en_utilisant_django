@@ -122,7 +122,8 @@ class UpdateTicket(LoginRequiredMixin, View):
         form = self.form(instance=ticket)
         return render(request,
                       "review/update_ticket.html",
-                      {"form": form})
+                      {"form": form,
+                       "ticket": ticket})
 
     def post(self, request, ticket_id):
         ticket = get_object_or_404(models.Ticket, id=ticket_id)
@@ -149,7 +150,7 @@ class DeleteTicket(LoginRequiredMixin, View):
     def post(self, request, ticket_id):
         ticket = get_object_or_404(models.Ticket, id=ticket_id)
         ticket.delete()
-        return redirect("feed")
+        return redirect("posts")
 
 
 class CreateReview(LoginRequiredMixin, View):
@@ -168,7 +169,7 @@ class CreateReview(LoginRequiredMixin, View):
     def post(self, request):
         review_form = self.review_form(request.POST)
         ticket_form = self.ticket_form(request.POST, request.FILES)
-        if ticket_form.is_valid() and review_form.is_valid():
+        if all([ticket_form.is_valid(), review_form.is_valid()]):
             ticket = ticket_form.save(commit=False)
             ticket.user = request.user
             ticket.save()
@@ -223,7 +224,6 @@ class UpdateReview(LoginRequiredMixin, View):
         review = get_object_or_404(models.Review, id=review_id)
         form = self.form(request.POST)
         if form.is_valid():
-            # review.ticket = form.cleaned_data["ticket"]
             review.rating = form.cleaned_data["rating"]
             review.headline = form.cleaned_data["headline"]
             review.body = form.cleaned_data["body"]
@@ -245,7 +245,7 @@ class DeleteReview(LoginRequiredMixin, View):
     def post(self, request, review_id):
         review = get_object_or_404(models.Review, id=review_id)
         review.delete()
-        return redirect("feed")
+        return redirect("posts")
 
 
 class FollowPage(LoginRequiredMixin, View):
@@ -271,12 +271,15 @@ class FollowPage(LoginRequiredMixin, View):
             follow = models.UserFollows()
             follow.user = request.user
             followed_name = form.cleaned_data["followed_name"]
-            try:
-                followed_user = User.objects.get(username=followed_name)
-                follow.followed_user = followed_user
-                follow.save()
-            except User.DoesNotExist:
-                errors.append("Aucun user ne correspond à ce nom.")
+            if follow.user.username == followed_name:
+                errors.append("Vous ne pouvez pas vous suivre vous même.")
+            else:
+                try:
+                    followed_user = User.objects.get(username=followed_name)
+                    follow.followed_user = followed_user
+                    follow.save()
+                except User.DoesNotExist:
+                    errors.append("Aucun user ne correspond à ce nom.")
         follows = models.UserFollows.objects.filter(user=request.user)
         followers = models.UserFollows.objects.filter(followed_user=request.user)
 
