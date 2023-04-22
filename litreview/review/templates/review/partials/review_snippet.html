@@ -1,36 +1,19 @@
+{% load review_extras %}
+
 <div id="review">
     <div id="review-content">
-        {% if request.user == review.user %}
-            <p>Vous avez publié une critique</p>
-        {% else %}
-            <p>{{ review.user }} a publié une critique</p>
-        {% endif %}
+        <p>{% get_poster_display review.user %} a publié une critique</p>
         <h3>{{ review.headline }} -
-            {% if review.rating == 0 %}
-                &#x2606;&#x2606;&#x2606;&#x2606;&#x2606;
-            {% endif %}
-            {% if review.rating == 1 %}
-                &#x2605;&#x2606;&#x2606;&#x2606;&#x2606;
-            {% endif %}
-            {% if review.rating == 2 %}
-                &#x2605;&#x2605;&#x2606;&#x2606;&#x2606;
-            {% endif %}
-            {% if review.rating == 3 %}
-                &#x2605;&#x2605;&#x2605;&#x2606;&#x2606;
-            {% endif %}
-            {% if review.rating == 4 %}
-                &#x2605;&#x2605;&#x2605;&#x2605;&#x2606;
-            {% endif %}
-            {% if review.rating == 5 %}
-                &#x2605;&#x2605;&#x2605;&#x2605;&#x2605;
-            {% endif %}
+            {% autoescape off %}
+                {% get_review_stars_display review.rating %}
+            {% endautoescape %}
         </h3>
         <p>{{ review.body }}</p>
     </div>
 
 
     <div id="review-date">
-        <p>{{ review.time_created }}</p>
+        <p>{% get_posted_at_display review.time_created %}</p>
     </div>
 </div>
 

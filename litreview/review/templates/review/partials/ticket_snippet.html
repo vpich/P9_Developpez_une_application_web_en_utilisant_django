@@ -1,10 +1,8 @@
+{% load review_extras %}
+
 <div id="ticket">
     <div id="ticket-content">
-        {% if request.user == ticket.user %}
-            <p>Vous avez demandé une critique</p>
-        {% else %}
-            <p>{{ ticket.user }} a demandé une critique</p>
-        {% endif %}
+        <p>{% get_poster_display ticket.user %} demandé une critique</p>
 
         <h3>{{ ticket.title }}</h3>
 
@@ -15,7 +13,7 @@
     </div>
 
     <div id="ticket-date">
-        <p>{{ ticket.time_created }}</p>
+        <p>{% get_posted_at_display ticket.time_created %}</p>
     </div>
 </div>
 

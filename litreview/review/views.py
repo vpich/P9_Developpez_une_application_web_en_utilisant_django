@@ -38,9 +38,6 @@ class Feed(LoginRequiredMixin, View):
             Q(ticket__in=own_tickets)
         )
 
-        tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
-        reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
-
         posts = sorted(
             chain(tickets, reviews),
             key=lambda post: post.time_created,
@@ -72,9 +69,6 @@ class PostsPage(LoginRequiredMixin, View):
     def get(self, request):
         tickets = self.ticket_form.objects.filter(user=request.user)
         reviews = self.review_form.objects.filter(user=request.user)
-
-        tickets = tickets.annotate(content_type=Value("TICKET", CharField()))
-        reviews = reviews.annotate(content_type=Value("REVIEW", CharField()))
 
         posts = sorted(
             chain(tickets, reviews),

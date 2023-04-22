@@ -1,9 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block style %}
-  <link rel="stylesheet" href="{% static 'authentication/style.css' %}" />
-{% endblock %}
+{% load review_extras %}
 
 {% block content %}
 <div id="feed">
@@ -18,11 +14,11 @@
 
     {% for post in page_obj %}
         <div class="container">
-            {% if post.content_type == "TICKET" %}
+            {% if post|model_type == "Ticket" %}
                 {% include "review/partials/ticket_snippet.html" with ticket=post %}
             {% endif %}
 
-            {% if post.content_type == "REVIEW" %}
+            {% if post|model_type == "Review" %}
                 {% include "review/partials/review_snippet.html" with review=post %}
             {% endif %}
         </div>
