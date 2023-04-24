@@ -3,8 +3,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.db.models import CharField, Value, Q
+from django.db.models import Q
 from django.core.paginator import Paginator
+from django.core.exceptions import PermissionDenied
 
 
 from authentication.models import User
@@ -13,12 +14,18 @@ from . import forms, models
 
 def owner_permission(request, element):
     if request.user != element.user:
-        raise ValueError("Vous ne pouvez pas modifier/supprimer un objet dont vous n'êtes pas le créateur.")
+        message = "Vous n'êtes pas le créateur de ce post."
+        raise PermissionDenied(message)
+
+
+def permission_denied_view(request, exception):
+    return render(request,
+                  "review/permission_denied.html")
 
 
 def ticket_already_responded(ticket):
     if models.Review.objects.filter(ticket=ticket):
-        raise ValueError("Ce ticket à déjà eu une réponse")
+        raise Exception("Ce ticket à déjà eu une réponse")
 
 
 class Feed(LoginRequiredMixin, View):

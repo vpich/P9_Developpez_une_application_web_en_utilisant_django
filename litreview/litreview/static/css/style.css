@@ -231,6 +231,11 @@ input {
 #signup ul, #signup .helptext {
   display: none;
 }
+#signup .errorlist {
+  display: block;
+  text-align: justify;
+  padding-inline: 10%;
+}
 #signup form p label {
   display: none;
 }
@@ -239,8 +244,22 @@ input {
   margin-left: 10px;
 }
 
+.error, .success {
+  text-align: center;
+  padding: 4px;
+  margin: auto;
+  border-left: solid 1px black;
+  border-right: solid 1px black;
+}
+
 .error {
   color: red;
+  background: palegoldenrod;
+}
+
+.success {
+  color: green;
+  background: lightgreen;
 }
 
 #login {

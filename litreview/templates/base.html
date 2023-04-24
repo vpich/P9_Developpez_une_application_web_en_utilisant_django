@@ -1,4 +1,5 @@
 {% load static %}
+{% load review_extras %}
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -21,9 +22,14 @@
           {% endif %}
       </header>
 
-
+      {% for message in messages %}
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+        </p>
+      {% endfor %}
 
         <div id="main-container">
+
             {% block content %}
             {% endblock %}
         </div>

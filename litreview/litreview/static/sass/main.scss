@@ -242,6 +242,13 @@ input {
     ul, .helptext {
         display: none;
     }
+
+    .errorlist {
+        display: block;
+        text-align: justify;
+        padding-inline: 10%;
+    }
+
     form p label {
         display: none;
     }
@@ -251,8 +258,22 @@ input {
     }
 }
 
+.error, .success {
+    text-align: center;
+    padding: 4px;
+    margin: auto;
+    border-left: solid 1px black;
+    border-right: solid 1px black;
+}
+
 .error {
     color: red;
+    background: palegoldenrod;
+}
+
+.success {
+    color: green;
+    background: lightgreen;
 }
 
 #login {

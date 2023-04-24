@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="permission-denied">
+    <h2>Erreur 403</h2>
+    <p>Type d'erreur: {{ exception }}</p>
+    <a href="{% url 'feed' %}">
+        <button>Retour en arrière</button>
+    </a>
+</div>
+
+{% endblock %}
