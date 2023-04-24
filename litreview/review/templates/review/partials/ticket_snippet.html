@@ -2,7 +2,7 @@
 
 <div id="ticket">
     <div id="ticket-content">
-        <p>{% get_poster_display ticket.user %} demandé une critique</p>
+        <p>{% get_poster_display ticket.user %} {% get_verb_display ticket.user %} demandé une critique</p>
 
         <h3>{{ ticket.title }}</h3>
 

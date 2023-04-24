@@ -45,3 +45,4 @@ if settings.DEBUG:
 
 
 handler403 = "review.views.permission_denied_view"
+handler404 = "review.views.page_not_found_view"

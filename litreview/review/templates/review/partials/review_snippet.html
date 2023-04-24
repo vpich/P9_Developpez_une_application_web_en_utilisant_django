@@ -2,7 +2,7 @@
 
 <div id="review">
     <div id="review-content">
-        <p>{% get_poster_display review.user %} a publié une critique</p>
+        <p>{% get_poster_display review.user %} {% get_verb_display review.user %} publié une critique</p>
         <h3>{{ review.headline }} -
             {% autoescape off %}
                 {% get_review_stars_display review.rating %}
@@ -18,7 +18,7 @@
 </div>
 
 <div id="responded-ticket">
-    <p>Ticket - {{ review.ticket.user }}</p>
+    <p>Ticket - {% get_poster_display review.ticket.user %}</p>
     <p>{{ review.ticket.title }}</p>
     {% if review.ticket.image %}
         <img src="{{ review.ticket.image.url }}">

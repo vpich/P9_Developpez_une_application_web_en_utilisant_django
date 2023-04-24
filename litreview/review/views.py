@@ -6,26 +6,39 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormVi
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.core.exceptions import PermissionDenied
-
+from django.contrib import messages
+from django.db import IntegrityError
 
 from authentication.models import User
 from . import forms, models
 
 
+ERROR_MESSAGE = "Saisie invalide."
+DELETE_MESSAGE = "Suppression effectuée."
+
+
 def owner_permission(request, element):
     if request.user != element.user:
-        message = "Vous n'êtes pas le créateur de ce post."
-        raise PermissionDenied(message)
+        exception = "Vous ne pouvez pas modifier ou supprimer un post dont vous n'êtes pas le créateur."
+        raise PermissionDenied(exception)
 
 
 def permission_denied_view(request, exception):
     return render(request,
-                  "review/permission_denied.html")
+                  "review/permission_denied.html",
+                  {"exception": exception})
 
 
 def ticket_already_responded(ticket):
     if models.Review.objects.filter(ticket=ticket):
-        raise Exception("Ce ticket à déjà eu une réponse")
+        message = "Vous ne pouvez pas répondre à un ticket qui a déjà obtenu une réponse."
+        raise PermissionDenied(message)
+
+
+def page_not_found_view(request, exception):
+    return render(request,
+                  "review/page_not_found.html",
+                  {"exception": exception})
 
 
 class Feed(LoginRequiredMixin, View):
@@ -109,7 +122,11 @@ class CreateTicket(LoginRequiredMixin, View):
             ticket = form.save(commit=False)
             ticket.user = request.user
             ticket.save()
+            message = "Votre demande de critique a été créée."
+            messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
+        message = "Vous ne pouvez pas ajouter de fichiers qui ne soient pas au format image."
+        messages.add_message(request, messages.ERROR, message)
         return redirect("create-ticket")
 
 
@@ -134,7 +151,10 @@ class UpdateTicket(LoginRequiredMixin, View):
             ticket.description = form.cleaned_data["description"]
             ticket.image = form.cleaned_data["image"]
             ticket.save()
+            message = "La mise à jour de votre demande a été prise en compte."
+            messages.add_message(request, messages.SUCCESS, message)
             return redirect("posts")
+        messages.add_message(request, messages.ERROR, ERROR_MESSAGE)
         return redirect("update-ticket", ticket_id)
 
 
@@ -151,6 +171,7 @@ class DeleteTicket(LoginRequiredMixin, View):
     def post(self, request, ticket_id):
         ticket = get_object_or_404(models.Ticket, id=ticket_id)
         ticket.delete()
+        messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
         return redirect("posts")
 
 
@@ -178,7 +199,10 @@ class CreateReview(LoginRequiredMixin, View):
             review.user = request.user
             review.ticket = ticket
             review.save()
+            message = "Votre critique a été créée."
+            messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
+        messages.add_message(request, messages.ERROR, ERROR_MESSAGE)
         return redirect("create-review")
 
 
@@ -204,7 +228,10 @@ class CreateReviewResponse(LoginRequiredMixin, View):
             review.user = request.user
             review.ticket = ticket
             review.save()
+            message = "Votre critique a été créée."
+            messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
+        messages.add_message(request, messages.ERROR, ERROR_MESSAGE)
         return redirect("create-review-response")
 
 
@@ -229,7 +256,10 @@ class UpdateReview(LoginRequiredMixin, View):
             review.headline = form.cleaned_data["headline"]
             review.body = form.cleaned_data["body"]
             review.save()
+            message = "La mise à jour de votre critique a été prise en compte."
+            messages.add_message(request, messages.SUCCESS, message)
             return redirect("posts")
+        messages.add_message(request, messages.ERROR, ERROR_MESSAGE)
         return redirect("update-review", review_id)
 
 
@@ -246,6 +276,7 @@ class DeleteReview(LoginRequiredMixin, View):
     def post(self, request, review_id):
         review = get_object_or_404(models.Review, id=review_id)
         review.delete()
+        messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
         return redirect("posts")
 
 
@@ -262,25 +293,31 @@ class FollowPage(LoginRequiredMixin, View):
                       "review/follows.html",
                       {"follows": follows,
                        "form": form,
-                       "followers": followers,
-                       "errors": []})
+                       "followers": followers})
 
     def post(self, request):
-        errors = []
         form = self.form(request.POST)
         if form.is_valid():
             follow = models.UserFollows()
             follow.user = request.user
             followed_name = form.cleaned_data["followed_name"]
             if follow.user.username == followed_name:
-                errors.append("Vous ne pouvez pas vous suivre vous même.")
+                message = "Vous ne pouvez pas vous suivre vous même."
+                messages.add_message(request, messages.ERROR, message)
             else:
                 try:
                     followed_user = User.objects.get(username=followed_name)
                     follow.followed_user = followed_user
                     follow.save()
+                    message = f"Vous avez ajouté {follow.followed_user} à votre liste de suivi."
+                    messages.add_message(request, messages.SUCCESS, message)
                 except User.DoesNotExist:
-                    errors.append("Aucun user ne correspond à ce nom.")
+                    message = "Aucun user ne correspond à ce nom."
+                    messages.add_message(request, messages.ERROR, message)
+                except IntegrityError:
+                    message = "Vous suivez déjà cet utilisateur."
+                    messages.add_message(request, messages.ERROR, message)
+
         follows = models.UserFollows.objects.filter(user=request.user)
         followers = models.UserFollows.objects.filter(followed_user=request.user)
 
@@ -288,8 +325,7 @@ class FollowPage(LoginRequiredMixin, View):
                       "review/follows.html",
                       {"follows": follows,
                        "form": form,
-                       "followers": followers,
-                       "errors": errors})
+                       "followers": followers})
 
 
 class DeleteFollow(LoginRequiredMixin, View):
@@ -307,4 +343,5 @@ class DeleteFollow(LoginRequiredMixin, View):
     def post(self, request, follow_id):
         follow = self.model.objects.get(id=follow_id)
         follow.delete()
+        messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
         return redirect("followed-users")
