@@ -2,19 +2,21 @@
 
 <div id="review">
     <div id="review-content">
-        <p>{% get_poster_display review.user %} {% get_verb_display review.user %} publié une critique</p>
+        <div id="review-header">
+            <p id="review-header-title">{% get_poster_display review.user %} {% get_verb_display review.user %} publié une critique</p>
+            <p id="review-header-date">{% get_posted_at_display review.time_created %}</p>
+        </div>
+
         <h3>{{ review.headline }} -
             {% autoescape off %}
                 {% get_review_stars_display review.rating %}
             {% endautoescape %}
         </h3>
-        <p>{{ review.body }}</p>
+        <p id="review-content-body">{{ review.body }}</p>
     </div>
 
 
-    <div id="review-date">
-        <p>{% get_posted_at_display review.time_created %}</p>
-    </div>
+
 </div>
 
 <div id="responded-ticket">

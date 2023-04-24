@@ -21,6 +21,7 @@ class LoginPageView(View):
 
     def post(self, request):
         form = self.form(request.POST)
+        message = "Saisie incorrecte."
         if form.is_valid():
             user = authenticate(
                 username=form.cleaned_data["username"],
@@ -31,8 +32,13 @@ class LoginPageView(View):
                 login(request, user)
                 messages.add_message(request, messages.SUCCESS, message)
                 return redirect("feed")
-            message = "Le nom d'utilisateur ou le mot de passe est erroné."
-            messages.add_message(request, messages.ERROR, message)
+            elif self.users.filter(username=form.cleaned_data["username"]):
+                message = "Le mot de passe est erroné."
+            elif user is None:
+                message = "L'utilisateur n'existe pas. Veuillez créer un compte si vous n'en possédez pas."
+            else:
+                message = "Le nom d'utilisateur ou le mot de passe est erroné."
+        messages.add_message(request, messages.ERROR, message)
 
         return render(request,
                       self.template_name,
@@ -57,7 +63,7 @@ class SignupPage(View):
             message = f"Votre compte a été créé. Bienvenue {user.username} !"
             messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
-        message = "Le mot de passe est invalide."
+        message = "Le nom d'utilisateur ou le mot de passe est invalide."
         messages.add_message(request, messages.ERROR, message)
 
         return render(request,

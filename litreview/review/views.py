@@ -10,7 +10,8 @@ from django.contrib import messages
 from django.db import IntegrityError
 
 from authentication.models import User
-from . import forms, models
+from models import Ticket, Review, UserFollows
+from forms import TicketForm, ReviewForm, FollowForm
 
 
 ERROR_MESSAGE = "Saisie invalide."
@@ -30,7 +31,7 @@ def permission_denied_view(request, exception):
 
 
 def ticket_already_responded(ticket):
-    if models.Review.objects.filter(ticket=ticket):
+    if Review.objects.filter(ticket=ticket):
         message = "Vous ne pouvez pas répondre à un ticket qui a déjà obtenu une réponse."
         raise PermissionDenied(message)
 
@@ -46,14 +47,14 @@ class Feed(LoginRequiredMixin, View):
 
     def get(self, request):
 
-        follows = models.UserFollows.objects.filter(user=request.user.id)
-        tickets = models.Ticket.objects.filter(
+        follows = UserFollows.objects.filter(user=request.user.id)
+        tickets = Ticket.objects.filter(
             Q(user__in=follows.values("followed_user")) |
             Q(user=request.user.id)
         )
 
-        own_tickets = models.Ticket.objects.filter(user=request.user.id)
-        reviews = models.Review.objects.filter(
+        own_tickets = Ticket.objects.filter(user=request.user.id)
+        reviews = Review.objects.filter(
             Q(user__in=follows.values("followed_user")) |
             Q(ticket__in=own_tickets)
         )
@@ -71,7 +72,7 @@ class Feed(LoginRequiredMixin, View):
 
         tickets_responded = []
         for ticket in tickets:
-            all_reviews = models.Review.objects.filter(ticket=ticket)
+            all_reviews = Review.objects.filter(ticket=ticket)
             if all_reviews:
                 tickets_responded.append(ticket.id)
 
@@ -83,8 +84,8 @@ class Feed(LoginRequiredMixin, View):
 
 class PostsPage(LoginRequiredMixin, View):
     login_url = "/login/"
-    ticket_form = models.Ticket
-    review_form = models.Review
+    ticket_form = Ticket
+    review_form = Review
 
     def get(self, request):
         tickets = self.ticket_form.objects.filter(user=request.user)
@@ -106,9 +107,15 @@ class PostsPage(LoginRequiredMixin, View):
                       {"page_obj": page_obj})
 
 
+# class CreateTicket(LoginRequiredMixin, CreateView):
+#     model = models.Ticket
+#     form_class = forms.TicketForm
+#     template_name = "review/create_ticket.html"
+
+
 class CreateTicket(LoginRequiredMixin, View):
     login_url = "/login/"
-    form = forms.TicketForm
+    form = TicketForm
 
     def get(self, request):
         form = self.form()
@@ -125,17 +132,16 @@ class CreateTicket(LoginRequiredMixin, View):
             message = "Votre demande de critique a été créée."
             messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
-        message = "Vous ne pouvez pas ajouter de fichiers qui ne soient pas au format image."
-        messages.add_message(request, messages.ERROR, message)
+        messages.add_message(request, messages.ERROR, ERROR_MESSAGE)
         return redirect("create-ticket")
 
 
 class UpdateTicket(LoginRequiredMixin, View):
     login_url = "/login/"
-    form = forms.TicketForm
+    form = TicketForm
 
     def get(self, request, ticket_id):
-        ticket = get_object_or_404(models.Ticket, id=ticket_id)
+        ticket = get_object_or_404(Ticket, id=ticket_id)
         owner_permission(request, ticket)
         form = self.form(instance=ticket)
         return render(request,
@@ -144,7 +150,7 @@ class UpdateTicket(LoginRequiredMixin, View):
                        "ticket": ticket})
 
     def post(self, request, ticket_id):
-        ticket = get_object_or_404(models.Ticket, id=ticket_id)
+        ticket = get_object_or_404(Ticket, id=ticket_id)
         form = self.form(request.POST, request.FILES)
         if form.is_valid():
             ticket.title = form.cleaned_data["title"]
@@ -162,14 +168,14 @@ class DeleteTicket(LoginRequiredMixin, View):
     login_url = "/login/"
 
     def get(self, request, ticket_id):
-        ticket = get_object_or_404(models.Ticket, id=ticket_id)
+        ticket = get_object_or_404(Ticket, id=ticket_id)
         owner_permission(request, ticket)
         return render(request,
                       "review/delete_ticket.html",
                       {"ticket": ticket})
 
     def post(self, request, ticket_id):
-        ticket = get_object_or_404(models.Ticket, id=ticket_id)
+        ticket = get_object_or_404(Ticket, id=ticket_id)
         ticket.delete()
         messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
         return redirect("posts")
@@ -177,8 +183,8 @@ class DeleteTicket(LoginRequiredMixin, View):
 
 class CreateReview(LoginRequiredMixin, View):
     login_url = "/login/"
-    review_form = forms.ReviewForm
-    ticket_form = forms.TicketForm
+    review_form = ReviewForm
+    ticket_form = TicketForm
 
     def get(self, request):
         review_form = self.review_form()
@@ -208,8 +214,8 @@ class CreateReview(LoginRequiredMixin, View):
 
 class CreateReviewResponse(LoginRequiredMixin, View):
     login_url = "/login/"
-    form = forms.ReviewForm
-    model = models.Ticket
+    form = ReviewForm
+    model = Ticket
 
     def get(self, request, ticket_id):
         form = self.form()
@@ -237,10 +243,10 @@ class CreateReviewResponse(LoginRequiredMixin, View):
 
 class UpdateReview(LoginRequiredMixin, View):
     login_url = "/login/"
-    form = forms.ReviewForm
+    form = ReviewForm
 
     def get(self, request, review_id):
-        review = get_object_or_404(models.Review, id=review_id)
+        review = get_object_or_404(Review, id=review_id)
         owner_permission(request, review)
         form = self.form(instance=review)
         return render(request,
@@ -249,7 +255,7 @@ class UpdateReview(LoginRequiredMixin, View):
                        "review": review})
 
     def post(self, request, review_id):
-        review = get_object_or_404(models.Review, id=review_id)
+        review = get_object_or_404(Review, id=review_id)
         form = self.form(request.POST)
         if form.is_valid():
             review.rating = form.cleaned_data["rating"]
@@ -267,14 +273,14 @@ class DeleteReview(LoginRequiredMixin, View):
     login_url = "/login/"
 
     def get(self, request, review_id):
-        review = get_object_or_404(models.Review, id=review_id)
+        review = get_object_or_404(Review, id=review_id)
         owner_permission(request, review)
         return render(request,
                       "review/delete_review.html",
                       {"review": review})
 
     def post(self, request, review_id):
-        review = get_object_or_404(models.Review, id=review_id)
+        review = get_object_or_404(Review, id=review_id)
         review.delete()
         messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
         return redirect("posts")
@@ -282,12 +288,12 @@ class DeleteReview(LoginRequiredMixin, View):
 
 class FollowPage(LoginRequiredMixin, View):
     login_url = "/login/"
-    form = forms.FollowForm
+    form = FollowForm
 
     def get(self, request):
         form = self.form()
-        follows = models.UserFollows.objects.filter(user=request.user)
-        followers = models.UserFollows.objects.filter(followed_user=request.user)
+        follows = UserFollows.objects.filter(user=request.user)
+        followers = UserFollows.objects.filter(followed_user=request.user)
 
         return render(request,
                       "review/follows.html",
@@ -297,29 +303,31 @@ class FollowPage(LoginRequiredMixin, View):
 
     def post(self, request):
         form = self.form(request.POST)
+        message = ERROR_MESSAGE
+        message_success = None
         if form.is_valid():
-            follow = models.UserFollows()
+            follow = UserFollows()
             follow.user = request.user
             followed_name = form.cleaned_data["followed_name"]
             if follow.user.username == followed_name:
                 message = "Vous ne pouvez pas vous suivre vous même."
-                messages.add_message(request, messages.ERROR, message)
             else:
                 try:
                     followed_user = User.objects.get(username=followed_name)
                     follow.followed_user = followed_user
                     follow.save()
-                    message = f"Vous avez ajouté {follow.followed_user} à votre liste de suivi."
-                    messages.add_message(request, messages.SUCCESS, message)
+                    message_success = f"Vous avez ajouté {follow.followed_user} à votre liste de suivi."
                 except User.DoesNotExist:
-                    message = "Aucun user ne correspond à ce nom."
-                    messages.add_message(request, messages.ERROR, message)
+                    message = "Aucun utilisateur ne correspond à ce nom."
                 except IntegrityError:
                     message = "Vous suivez déjà cet utilisateur."
-                    messages.add_message(request, messages.ERROR, message)
+        if message_success:
+            messages.add_message(request, messages.SUCCESS, message_success)
+        else:
+            messages.add_message(request, messages.ERROR, message)
 
-        follows = models.UserFollows.objects.filter(user=request.user)
-        followers = models.UserFollows.objects.filter(followed_user=request.user)
+        follows = UserFollows.objects.filter(user=request.user)
+        followers = UserFollows.objects.filter(followed_user=request.user)
 
         return render(request,
                       "review/follows.html",
@@ -330,7 +338,7 @@ class FollowPage(LoginRequiredMixin, View):
 
 class DeleteFollow(LoginRequiredMixin, View):
     login_url = "/login/"
-    model = models.UserFollows
+    model = UserFollows
 
     def get(self, request, follow_id):
         follow = self.model.objects.get(id=follow_id)

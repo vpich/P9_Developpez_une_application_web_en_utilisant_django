@@ -2,19 +2,20 @@
 
 <div id="ticket">
     <div id="ticket-content">
-        <p>{% get_poster_display ticket.user %} {% get_verb_display ticket.user %} demandé une critique</p>
+        <div id="ticket-header">
+            <p id="ticket-header-title">{% get_poster_display ticket.user %} {% get_verb_display ticket.user %} demandé une critique</p>
+            <p id="ticket-header-date">{% get_posted_at_display ticket.time_created %}</p>
+        </div>
 
         <h3>{{ ticket.title }}</h3>
 
-        <p>{{ ticket.description }}</p>
+        <p id="ticket-content-body">{{ ticket.description }}</p>
         {% if ticket.image %}
             <img src="{{ ticket.image.url }}">
         {% endif %}
     </div>
 
-    <div id="ticket-date">
-        <p>{% get_posted_at_display ticket.time_created %}</p>
-    </div>
+
 </div>
 
 {% if ticket.id not in tickets_responded %}
