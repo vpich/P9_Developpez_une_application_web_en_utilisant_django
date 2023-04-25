@@ -14,14 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 
 import authentication.views
 import review.views
 
 urlpatterns = [
+    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     path("", authentication.views.LoginPageView.as_view()),
     path("login/", authentication.views.LoginPageView.as_view(), name="login"),
     path("signup/", authentication.views.SignupPage.as_view(), name="signup"),
@@ -32,7 +35,9 @@ urlpatterns = [
     path("ticket/<int:ticket_id>/update/", review.views.UpdateTicket.as_view(), name="update-ticket"),
     path("ticket/<int:ticket_id>/delete/", review.views.DeleteTicket.as_view(), name="delete-ticket"),
     path("review/create/", review.views.CreateReview.as_view(), name="create-review"),
-    path("review/create/ticket/<int:ticket_id>/", review.views.CreateReviewResponse.as_view(), name="create-review-response"),
+    path("review/create/ticket/<int:ticket_id>/",
+         review.views.CreateReviewResponse.as_view(),
+         name="create-review-response"),
     path("review/<int:review_id>/update/", review.views.UpdateReview.as_view(), name="update-review"),
     path("review/<int:review_id>/delete/", review.views.DeleteReview.as_view(), name="delete-review"),
     path("follows/", review.views.FollowPage.as_view(), name="followed-users"),
