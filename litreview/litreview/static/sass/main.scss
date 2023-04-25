@@ -434,6 +434,12 @@ input {
     }
 }
 
+#create-review-response, #edit-review {
+    #ticket-content {
+        width: 100%;
+    }
+}
+
 #edit-ticket {
     img {
         margin-left: 0px;
