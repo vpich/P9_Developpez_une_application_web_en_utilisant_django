@@ -5,10 +5,6 @@ header {
     text-align: center;
     height: 40px;
     justify-content: right;
-    h1 {
-        width: 100%;
-        position: absolute;
-    }
     nav {
         margin: 10px;
         z-index: 4;
@@ -28,6 +24,8 @@ body {
 h1 {
     font-weight: normal;
     font-size: medium;
+    width: 100%;
+    position: absolute;
 }
 
 h2 {
@@ -45,8 +43,48 @@ h3 {
     font-size: large;
 }
 
-#paginator {
+#login {
+    display: flex;
     text-align: center;
+    padding-top: 10%;
+    width: 90vw;
+    justify-content: center;
+    form {
+        p label {
+        display: none;
+        }
+        button {
+            float: right;
+        }
+    }
+
+    &-form, &-signup {
+        width: 40vw;
+    }
+
+    &-form {
+        h2 {
+            margin-top: 0px;
+            margin-bottom: 50px;
+        }
+    }
+}
+
+#signup {
+    text-align: center;
+    ul, .helptext {
+        display: none;
+    }
+    .errorlist {
+        display: block;
+    }
+    form p label {
+        display: none;
+    }
+    button {
+        float: right;
+        margin-left: 10px;
+    }
 }
 
 img {
@@ -71,7 +109,6 @@ button {
     &:active {
         filter: brightness(0.5);
     }
-
 }
 
 input {
@@ -94,6 +131,26 @@ input {
     }
 }
 
+#paginator {
+    text-align: center;
+}
+
+#posts, #feed {
+    .container {
+        border: solid 1px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        &-buttons {
+            text-align: right;
+            display: flex;
+            justify-content: right;
+            button {
+                margin: 10px;
+            }
+        }
+    }
+}
+
 #feed {
     &-buttons {
         display: grid;
@@ -107,7 +164,13 @@ input {
     }
 }
 
-#review, #ticket {
+#posts {
+    #ticket-buttons {
+        display: none;
+    }
+}
+
+#ticket, #review {
     display: flex;
     max-height: 450px;
     overflow: auto;
@@ -119,7 +182,6 @@ input {
             text-align: justify;
         }
     }
-
     &-header {
         display: flex;
         &-title {
@@ -144,40 +206,159 @@ input {
     }
 }
 
+#create-ticket, #edit-ticket, #create-review-ticket {
+    &-form p {
+        display: grid;
+        label {
+            margin-bottom: 15px;
+        }
+    }
+    button {
+        float: right;
+    }
+    #id_title {
+            justify-self: center;
+            width: 100%;
+            text-align: left;
+    }
+    textarea {
+        border: solid 1px;
+        width: 100%;
+        justify-self: center;
+        resize: none;
+    }
+    #id_image {
+        width: 141px;
+        height: 27px;
+        z-index: 4;
+        opacity: 0;
+        &:hover {
+            box-sizing: border-box;
+            border: solid 15px;
+            border-radius: 5px;
+            opacity: 30%;
+            cursor: pointer;
+        }
+    }
+    #upload-button {
+        z-index: 1;
+        position: relative;
+        bottom: 55px;
+        float: left;
+    }
+    span {
+        display: block;
+    }
+}
+
+#edit-ticket {
+    img {
+        margin-left: 0px;
+    }
+    #upload-button {
+        bottom: 0px;
+    }
+    p:last-of-type {
+        display: none;
+    }
+    #id_image {
+        position: absolute;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+}
+
 #responded-ticket {
     border: solid 1px;
     margin: 8px;
     width: auto;
 }
 
-#posts, #feed {
-    .container {
+#create-review-response, #edit-review, #create-review {
+    h4 {
+        margin-top: 5px;
+        margin-bottom: 0px;
+        font-size: medium;
+        font-weight: normal;
+    }
+    &-ticket {
         border: solid 1px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        &-buttons {
-            text-align: right;
-            display: flex;
-            justify-content: right;
-            button {
-                margin: 10px;
+        #ticket {
+            border: solid 1px;
+            margin: 15px;
+            width: auto;
+            &-content {
+                width: 100%;
+            }
+            &-date {
+                width: 30%;
+            }
+        }
+        &-form {
+            width: initial;
+            padding: 10px;
+            border: solid 1px;
+            margin: 10px;
+        }
+    }
+    #upload-button {
+        position: relative;
+        bottom: 487px;
+        left: 21px;
+    }
+    &-review {
+        border: solid 1px;
+        padding-bottom: 40px;
+        button {
+            float: right;
+            margin: 5px;
+        }
+        #review-form {
+            width: auto;
+            p {
+                margin: 0px;
+                display: grid;
+            }
+            padding: 15px;
+            #id_rating {
+                display: flex;
+                width: 70%;
+                justify-content: space-between;
+                overflow: hidden;
+                div {
+                    width: auto;
+                }
+                label {
+                    display: inline-flex;
+                    align-items: center;
+                }
+                input {
+                    margin-right: 10px;
+                    margin-left: 10px;
+                }
+            }
+            input {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                justify-self: center;
+                width: 100%;
+            }
+            #id_headline {
+                text-align: left;
+            }
+            #id_body {
+                margin-top: 10px;
+                width: 100%;
+                justify-self: center;
+                resize: none;
             }
         }
     }
-//
-//     #review-date, #ticket-date {
-//         width: 30%;
-//     }
-
-    #responded-ticket {
-        width: auto;
-        margin: 8px;
-    }
 }
 
-#posts {
-    #ticket-buttons {
-        display: none;
+#create-review {
+    #ticket-content {
+        width: 70%;
     }
 }
 
@@ -235,25 +416,6 @@ input {
     }
 }
 
-#signup {
-    text-align: center;
-    ul, .helptext {
-        display: none;
-    }
-
-    .errorlist {
-        display: block;
-    }
-
-    form p label {
-        display: none;
-    }
-    button {
-        float: right;
-        margin-left: 10px;
-    }
-}
-
 .error, .success {
     text-align: center;
     padding: 4px;
@@ -277,190 +439,17 @@ input {
     padding-inline: 10%;
 }
 
-#login {
-    display: flex;
-    text-align: center;
-    padding-top: 10%;
-    width: 90vw;
-    justify-content: center;
-    form {
-        p label {
-        display: none;
-        }
-        button {
-            float: right;
-        }
-    }
-
-    &-form, &-signup {
-        width: 40vw;
-    }
-
-    &-form {
-        h2 {
-            margin-top: 0px;
-            margin-bottom: 50px;
-        }
-    }
-}
-
-#create-ticket, #edit-ticket, #create-review-ticket {
-    &-form p {
-        display: grid;
-        label {
-            margin-bottom: 15px;
-        }
-    }
-    button {
-        float: right;
-    }
-
-    #id_title {
-            justify-self: center;
-            width: 100%;
-    }
-
-    textarea {
-        border: solid 1px;
-        width: 100%;
-        justify-self: center;
-        resize: none;
-    }
-
-    #id_image {
-        width: 141px;
-        height: 27px;
-        z-index: 4;
-        opacity: 0;
-        &:hover {
-            box-sizing: border-box;
-            border: solid 15px;
-            border-radius: 5px;
-            opacity: 30%;
-            cursor: pointer;
-        }
-    }
-    #upload-button {
-        z-index: 1;
-        position: relative;
-        bottom: 55px;
-        float: left;
-    }
-    span {
-        display: block;
-    }
-}
-
-#create-review-response, #edit-review, #create-review {
-    h4 {
-        margin-top: 5px;
-        margin-bottom: 0px;
-        font-size: medium;
-        font-weight: normal;
-    }
-    &-ticket {
-        border: solid 1px;
-        #ticket {
-            border: solid 1px;
-            margin: 15px;
-            width: auto;
-            &-content {
-                width: 70%;
-            }
-            &-date {
-                width: 30%;
-            }
-        }
-        &-form {
-            width: initial;
-            padding: 10px;
-            border: solid 1px;
-            margin: 10px;
-        }
-    }
-
-    #upload-button {
-        position: relative;
-        bottom: 487px;
-        left: 21px;
-    }
-
-
-    &-review {
-        border: solid 1px;
-        padding-bottom: 40px;
-        button {
-            float: right;
-            margin: 5px;
-        }
-        #review-form {
-            width: auto;
-            p {
-                margin: 0px;
-                display: grid;
-            }
-            padding: 15px;
-            #id_rating {
-                display: flex;
-                width: 70%;
-                justify-content: space-between;
-                overflow: hidden;
-                div {
-                    width: auto;
-                }
-                label {
-                    display: inline-flex;
-                    align-items: center;
-                }
-                input {
-                    margin-right: 10px;
-                    margin-left: 10px;
-                }
-            }
-            input {
-                margin-top: 10px;
-                margin-bottom: 10px;
-                justify-self: center;
-                width: 100%;
-            }
-
-            #id_body {
-                margin-top: 10px;
-                width: 100%;
-                justify-self: center;
-                resize: none;
-            }
-        }
-    }
-}
-
-#create-review-response, #edit-review {
-    #ticket-content {
-        width: 100%;
-    }
-}
-
-#edit-ticket {
-    img {
-        margin-left: 0px;
-    }
-    #upload-button {
-        bottom: 0px;
-    }
-    p:last-of-type {
-        display: none;
-    }
-    #id_image {
-        position: absolute;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-}
-
-
 .delete {
     align-self: center;
     form {
         float: right;
+    }
+}
+
+.exceptions {
+    text-align: center;
+    h2 {
+        color: red;
+        font-weight: bold;
     }
 }
