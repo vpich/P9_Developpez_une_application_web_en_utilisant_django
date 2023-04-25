@@ -1,8 +1,7 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
-from django.db import models
-from django.db import IntegrityError
-from django.core.exceptions import ObjectDoesNotExist, FieldError
+from django.db import models, IntegrityError
+from django.core.exceptions import ObjectDoesNotExist, FieldError, BadRequest
 
 from authentication.models import User
 
@@ -77,7 +76,7 @@ class UserFollowsManager(models.Manager):
             except User.DoesNotExist:
                 return ObjectDoesNotExist
             except IntegrityError:
-                return IntegrityError
+                return BadRequest
             return follow
 
 

@@ -2,25 +2,15 @@ from itertools import chain
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.core.paginator import Paginator
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist, FieldError
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist, FieldError, BadRequest
 from django.contrib import messages
-from django.db import IntegrityError
 
-# from authentication.models import User
 from .models import Ticket, Review, UserFollows
 from .forms import TicketForm, ReviewForm, FollowForm
 
-
 ERROR_MESSAGE = "Saisie invalide."
 DELETE_MESSAGE = "Suppression effectuée."
-
-
-def owner_permission(request, element):
-    if request.user != element.user:
-        exception = "Vous ne pouvez pas modifier ou supprimer un post dont vous n'êtes pas le créateur."
-        raise PermissionDenied(exception)
 
 
 def permission_denied_view(request, exception):
@@ -29,21 +19,26 @@ def permission_denied_view(request, exception):
                   {"exception": exception})
 
 
+def page_not_found_view(request, exception):
+    return render(request,
+                  "review/page_not_found.html")
+
+
+def owner_permission(request, element):
+    if request.user != element.user:
+        exception = "Vous ne pouvez pas modifier ou supprimer un post dont vous n'êtes pas le créateur."
+        raise PermissionDenied(exception)
+
+
 def ticket_already_responded(ticket):
     if Review.objects.filter(ticket=ticket):
         message = "Vous ne pouvez pas répondre à un ticket qui a déjà obtenu une réponse."
         raise PermissionDenied(message)
 
 
-def page_not_found_view(request, exception):
-    return render(request,
-                  "review/page_not_found.html",
-                  {"exception": exception})
-
-
 def get_own_posts(request):
     tickets = Ticket.objects.filter(user=request.user.id)
-    reviews = Review.objects.filter(ticket__in=tickets)
+    reviews = Review.objects.filter(user=request.user.id)
 
     own_posts = chain(tickets, reviews)
 
@@ -83,8 +78,6 @@ def pagination(request, posts):
 
 
 class Feed(LoginRequiredMixin, View):
-    login_url = "/login/"
-    "review/feed.html"
 
     def get(self, request):
         own_posts = get_own_posts(request)
@@ -106,7 +99,6 @@ class Feed(LoginRequiredMixin, View):
 
 
 class PostsPage(LoginRequiredMixin, View):
-    login_url = "/login/"
 
     def get(self, request):
         posts = get_own_posts(request)
@@ -124,14 +116,7 @@ class PostsPage(LoginRequiredMixin, View):
                       {"page_obj": page_obj})
 
 
-# class CreateTicket(LoginRequiredMixin, CreateView):
-#     model = models.Ticket
-#     form_class = forms.TicketForm
-#     template_name = "review/create_ticket.html"
-
-
 class CreateTicket(LoginRequiredMixin, View):
-    login_url = "/login/"
     form = TicketForm
     model = Ticket
 
@@ -153,7 +138,6 @@ class CreateTicket(LoginRequiredMixin, View):
 
 
 class UpdateTicket(LoginRequiredMixin, View):
-    login_url = "/login/"
     form = TicketForm
 
     def get(self, request, ticket_id):
@@ -178,7 +162,6 @@ class UpdateTicket(LoginRequiredMixin, View):
 
 
 class DeleteTicket(LoginRequiredMixin, View):
-    login_url = "/login/"
 
     def get(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
@@ -195,7 +178,6 @@ class DeleteTicket(LoginRequiredMixin, View):
 
 
 class CreateReview(LoginRequiredMixin, View):
-    login_url = "/login/"
     review_form = ReviewForm
     ticket_form = TicketForm
     ticket_model = Ticket
@@ -221,7 +203,6 @@ class CreateReview(LoginRequiredMixin, View):
 
 
 class CreateReviewResponse(LoginRequiredMixin, View):
-    login_url = "/login/"
     form = ReviewForm
     ticket_model = Ticket
     review_model = Review
@@ -248,7 +229,6 @@ class CreateReviewResponse(LoginRequiredMixin, View):
 
 
 class UpdateReview(LoginRequiredMixin, View):
-    login_url = "/login/"
     form = ReviewForm
     model = Review
 
@@ -274,7 +254,6 @@ class UpdateReview(LoginRequiredMixin, View):
 
 
 class DeleteReview(LoginRequiredMixin, View):
-    login_url = "/login/"
 
     def get(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
@@ -291,7 +270,6 @@ class DeleteReview(LoginRequiredMixin, View):
 
 
 class FollowPage(LoginRequiredMixin, View):
-    login_url = "/login/"
     form = FollowForm
     model = UserFollows
 
@@ -318,7 +296,7 @@ class FollowPage(LoginRequiredMixin, View):
                 message_success = f"Vous avez ajouté {follow.followed_user} à votre liste de suivi."
             elif follow == ObjectDoesNotExist:
                 message = "Aucun utilisateur ne correspond à ce nom."
-            elif follow == IntegrityError:
+            elif follow == BadRequest:
                 message = "Vous suivez déjà cet utilisateur."
         if message_success:
             messages.add_message(request, messages.SUCCESS, message_success)
@@ -329,7 +307,6 @@ class FollowPage(LoginRequiredMixin, View):
 
 
 class DeleteFollow(LoginRequiredMixin, View):
-    login_url = "/login/"
     model = UserFollows
 
     def get(self, request, follow_id):
