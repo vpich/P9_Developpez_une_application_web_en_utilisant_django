@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="page-not-found">
+<div class="exceptions">
     <h2>Erreur 404: page introuvable</h2>
-    <p>Type d'erreur: {{ exception }}</p>
+    <p>La page que vous souhaitez accéder n'existe pas.</p>
     <a href="{% url 'feed' %}">
         <button>Retourner</button>
     </a>

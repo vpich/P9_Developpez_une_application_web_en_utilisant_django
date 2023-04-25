@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="permission-denied">
+<div class="exceptions">
     <h2>Erreur 403: accès interdit</h2>
-    <p>Type d'erreur: {{ exception }}</p>
+    <p>{{ exception }}</p>
     <a href="{% url 'feed' %}">
         <button>Retourner</button>
     </a>
