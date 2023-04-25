@@ -10,8 +10,8 @@ from django.contrib import messages
 from django.db import IntegrityError
 
 from authentication.models import User
-from models import Ticket, Review, UserFollows
-from forms import TicketForm, ReviewForm, FollowForm
+from .models import Ticket, Review, UserFollows
+from .forms import TicketForm, ReviewForm, FollowForm
 
 
 ERROR_MESSAGE = "Saisie invalide."
@@ -42,39 +42,63 @@ def page_not_found_view(request, exception):
                   {"exception": exception})
 
 
+def get_own_posts(request):
+    tickets = Ticket.objects.filter(user=request.user.id)
+    reviews = Review.objects.filter(ticket__in=tickets)
+
+    own_posts = chain(tickets, reviews)
+
+    return own_posts
+
+
+def get_followed_users_posts(request):
+    follows = UserFollows.objects.filter(user=request.user.id)
+    tickets = Ticket.objects.filter(user__in=follows.values("followed_user"))
+    reviews = Review.objects.filter(user__in=follows.values("followed_user"))
+
+    followed_posts = chain(tickets, reviews)
+
+    return followed_posts
+
+
+def get_tickets_responded(posts):
+    tickets_responded = []
+    tickets = []
+
+    for post in posts:
+        if type(post) == Ticket:
+            tickets.append(post)
+    for ticket in tickets:
+        all_reviews = Review.objects.filter(ticket=ticket)
+        if all_reviews:
+            tickets_responded.append(ticket.id)
+    return tickets_responded
+
+
+def pagination(request, posts):
+    paginator = Paginator(posts, 5)
+
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return page_obj
+
+
 class Feed(LoginRequiredMixin, View):
     login_url = "/login/"
+    "review/feed.html"
 
     def get(self, request):
-
-        follows = UserFollows.objects.filter(user=request.user.id)
-        tickets = Ticket.objects.filter(
-            Q(user__in=follows.values("followed_user")) |
-            Q(user=request.user.id)
-        )
-
-        own_tickets = Ticket.objects.filter(user=request.user.id)
-        reviews = Review.objects.filter(
-            Q(user__in=follows.values("followed_user")) |
-            Q(ticket__in=own_tickets)
-        )
+        own_posts = get_own_posts(request)
+        followed_users_posts = get_followed_users_posts(request)
 
         posts = sorted(
-            chain(tickets, reviews),
+            chain(own_posts, followed_users_posts),
             key=lambda post: post.time_created,
             reverse=True
         )
 
-        paginator = Paginator(posts, 5)
-
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        tickets_responded = []
-        for ticket in tickets:
-            all_reviews = Review.objects.filter(ticket=ticket)
-            if all_reviews:
-                tickets_responded.append(ticket.id)
+        page_obj = pagination(request, posts)
+        tickets_responded = get_tickets_responded(posts)
 
         return render(request,
                       "review/feed.html",
@@ -84,23 +108,17 @@ class Feed(LoginRequiredMixin, View):
 
 class PostsPage(LoginRequiredMixin, View):
     login_url = "/login/"
-    ticket_form = Ticket
-    review_form = Review
 
     def get(self, request):
-        tickets = self.ticket_form.objects.filter(user=request.user)
-        reviews = self.review_form.objects.filter(user=request.user)
+        posts = get_own_posts(request)
 
         posts = sorted(
-            chain(tickets, reviews),
+            posts,
             key=lambda post: post.time_created,
             reverse=True,
         )
 
-        paginator = Paginator(posts, 5)
-
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+        page_obj = pagination(request, posts)
 
         return render(request,
                       "review/posts.html",
