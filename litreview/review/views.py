@@ -3,13 +3,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-from django.db.models import Q
 from django.core.paginator import Paginator
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist, FieldError
 from django.contrib import messages
 from django.db import IntegrityError
 
-from authentication.models import User
+# from authentication.models import User
 from .models import Ticket, Review, UserFollows
 from .forms import TicketForm, ReviewForm, FollowForm
 
@@ -134,6 +133,7 @@ class PostsPage(LoginRequiredMixin, View):
 class CreateTicket(LoginRequiredMixin, View):
     login_url = "/login/"
     form = TicketForm
+    model = Ticket
 
     def get(self, request):
         form = self.form()
@@ -144,9 +144,7 @@ class CreateTicket(LoginRequiredMixin, View):
     def post(self, request):
         form = self.form(request.POST, request.FILES)
         if form.is_valid():
-            ticket = form.save(commit=False)
-            ticket.user = request.user
-            ticket.save()
+            self.model.objects.create(request.user, form)
             message = "Votre demande de critique a été créée."
             messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
@@ -171,10 +169,7 @@ class UpdateTicket(LoginRequiredMixin, View):
         ticket = get_object_or_404(Ticket, id=ticket_id)
         form = self.form(request.POST, request.FILES)
         if form.is_valid():
-            ticket.title = form.cleaned_data["title"]
-            ticket.description = form.cleaned_data["description"]
-            ticket.image = form.cleaned_data["image"]
-            ticket.save()
+            Ticket.objects.update(ticket, form)
             message = "La mise à jour de votre demande a été prise en compte."
             messages.add_message(request, messages.SUCCESS, message)
             return redirect("posts")
@@ -203,26 +198,21 @@ class CreateReview(LoginRequiredMixin, View):
     login_url = "/login/"
     review_form = ReviewForm
     ticket_form = TicketForm
+    ticket_model = Ticket
+    review_model = Review
 
     def get(self, request):
-        review_form = self.review_form()
-        ticket_form = self.ticket_form()
         return render(request,
                       "review/create_review.html",
-                      {"review_form": review_form,
-                       "ticket_form": ticket_form})
+                      {"review_form": self.review_form(),
+                       "ticket_form": self.ticket_form()})
 
     def post(self, request):
         review_form = self.review_form(request.POST)
         ticket_form = self.ticket_form(request.POST, request.FILES)
         if all([ticket_form.is_valid(), review_form.is_valid()]):
-            ticket = ticket_form.save(commit=False)
-            ticket.user = request.user
-            ticket.save()
-            review = review_form.save(commit=False)
-            review.user = request.user
-            review.ticket = ticket
-            review.save()
+            ticket = self.ticket_model.objects.create(request.user, ticket_form)
+            self.review_model.objects.create(request.user, review_form, ticket)
             message = "Votre critique a été créée."
             messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
@@ -233,11 +223,12 @@ class CreateReview(LoginRequiredMixin, View):
 class CreateReviewResponse(LoginRequiredMixin, View):
     login_url = "/login/"
     form = ReviewForm
-    model = Ticket
+    ticket_model = Ticket
+    review_model = Review
 
     def get(self, request, ticket_id):
         form = self.form()
-        ticket = self.model.objects.get(id=ticket_id)
+        ticket = self.ticket_model.objects.get(id=ticket_id)
         ticket_already_responded(ticket)
         return render(request,
                       "review/create_review_response.html",
@@ -246,22 +237,20 @@ class CreateReviewResponse(LoginRequiredMixin, View):
 
     def post(self, request, ticket_id):
         form = self.form(request.POST)
-        ticket = self.model.objects.get(id=ticket_id)
+        ticket = self.ticket_model.objects.get(id=ticket_id)
         if form.is_valid():
-            review = form.save(commit=False)
-            review.user = request.user
-            review.ticket = ticket
-            review.save()
+            self.review_model.objects.create(request.user, form, ticket)
             message = "Votre critique a été créée."
             messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
         messages.add_message(request, messages.ERROR, ERROR_MESSAGE)
-        return redirect("create-review-response")
+        return redirect("create-review-response", ticket_id)
 
 
 class UpdateReview(LoginRequiredMixin, View):
     login_url = "/login/"
     form = ReviewForm
+    model = Review
 
     def get(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
@@ -276,10 +265,7 @@ class UpdateReview(LoginRequiredMixin, View):
         review = get_object_or_404(Review, id=review_id)
         form = self.form(request.POST)
         if form.is_valid():
-            review.rating = form.cleaned_data["rating"]
-            review.headline = form.cleaned_data["headline"]
-            review.body = form.cleaned_data["body"]
-            review.save()
+            self.model.objects.update(review, form)
             message = "La mise à jour de votre critique a été prise en compte."
             messages.add_message(request, messages.SUCCESS, message)
             return redirect("posts")
@@ -307,6 +293,7 @@ class DeleteReview(LoginRequiredMixin, View):
 class FollowPage(LoginRequiredMixin, View):
     login_url = "/login/"
     form = FollowForm
+    model = UserFollows
 
     def get(self, request):
         form = self.form()
@@ -324,34 +311,21 @@ class FollowPage(LoginRequiredMixin, View):
         message = ERROR_MESSAGE
         message_success = None
         if form.is_valid():
-            follow = UserFollows()
-            follow.user = request.user
-            followed_name = form.cleaned_data["followed_name"]
-            if follow.user.username == followed_name:
+            follow = self.model.objects.create(request.user, form)
+            if follow == FieldError:
                 message = "Vous ne pouvez pas vous suivre vous même."
-            else:
-                try:
-                    followed_user = User.objects.get(username=followed_name)
-                    follow.followed_user = followed_user
-                    follow.save()
-                    message_success = f"Vous avez ajouté {follow.followed_user} à votre liste de suivi."
-                except User.DoesNotExist:
-                    message = "Aucun utilisateur ne correspond à ce nom."
-                except IntegrityError:
-                    message = "Vous suivez déjà cet utilisateur."
+            elif type(follow) == self.model:
+                message_success = f"Vous avez ajouté {follow.followed_user} à votre liste de suivi."
+            elif follow == ObjectDoesNotExist:
+                message = "Aucun utilisateur ne correspond à ce nom."
+            elif follow == IntegrityError:
+                message = "Vous suivez déjà cet utilisateur."
         if message_success:
             messages.add_message(request, messages.SUCCESS, message_success)
         else:
             messages.add_message(request, messages.ERROR, message)
 
-        follows = UserFollows.objects.filter(user=request.user)
-        followers = UserFollows.objects.filter(followed_user=request.user)
-
-        return render(request,
-                      "review/follows.html",
-                      {"follows": follows,
-                       "form": form,
-                       "followers": followers})
+        return redirect("followed-users")
 
 
 class DeleteFollow(LoginRequiredMixin, View):
