@@ -1,6 +1,6 @@
 from django import template
 import locale
-locale.setlocale(locale.LC_TIME,'')
+locale.setlocale(locale.LC_TIME, '')
 
 
 register = template.Library()

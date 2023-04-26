@@ -1,15 +1,5 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <section class="delete">
-        <h2>Suppression du ticket</h2>
-        <p>Êtes-vous sûr de vouloir supprimer ce ticket ?</p>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit">Supprimer</button>
-        </form>
-        <a href="{% url 'posts' %}">
-          <button>Retourner</button>
-        </a>
-    </section>
+    {% include "review/partials/delete_snippet.html" with post=ticket %}
 {% endblock %}

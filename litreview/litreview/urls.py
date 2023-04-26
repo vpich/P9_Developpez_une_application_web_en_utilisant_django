@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+
 from django.urls import path, re_path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -29,17 +29,37 @@ urlpatterns = [
     path("logout/", authentication.views.logout_user, name="logout"),
     path("feed/", review.views.Feed.as_view(), name="feed"),
     path("posts/", review.views.PostsPage.as_view(), name="posts"),
-    path("ticket/create/", review.views.CreateTicket.as_view(), name="create-ticket"),
-    path("ticket/<int:ticket_id>/update/", review.views.UpdateTicket.as_view(), name="update-ticket"),
-    path("ticket/<int:ticket_id>/delete/", review.views.DeleteTicket.as_view(), name="delete-ticket"),
-    path("review/create/", review.views.CreateReview.as_view(), name="create-review"),
+    path("ticket/create/",
+         review.views.CreateTicket.as_view(),
+         name="create-ticket"
+         ),
+    path("ticket/<int:ticket_id>/update/",
+         review.views.UpdateTicket.as_view(),
+         name="update-ticket"
+         ),
+    path("ticket/<int:ticket_id>/delete/",
+         review.views.DeleteTicket.as_view(),
+         name="delete-ticket"
+         ),
+    path("review/create/",
+         review.views.CreateReview.as_view(),
+         name="create-review"),
     path("review/create/ticket/<int:ticket_id>/",
          review.views.CreateReviewResponse.as_view(),
-         name="create-review-response"),
-    path("review/<int:review_id>/update/", review.views.UpdateReview.as_view(), name="update-review"),
-    path("review/<int:review_id>/delete/", review.views.DeleteReview.as_view(), name="delete-review"),
+         name="create-review-response"
+         ),
+    path("review/<int:review_id>/update/",
+         review.views.UpdateReview.as_view(),
+         name="update-review"),
+    path("review/<int:review_id>/delete/",
+         review.views.DeleteReview.as_view(),
+         name="delete-review"
+         ),
     path("follows/", review.views.FollowPage.as_view(), name="followed-users"),
-    path("follow/delete/<int:follow_id>/", review.views.DeleteFollow.as_view(), name="delete-follow"),
+    path("follow/delete/<int:follow_id>/",
+         review.views.DeleteFollow.as_view(),
+         name="delete-follow"
+         ),
 ]
 
 if settings.DEBUG:
@@ -47,8 +67,12 @@ if settings.DEBUG:
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 else:
     urlpatterns += (
-        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+        re_path(r'^media/(?P<path>.*)$',
+                serve, {'document_root': settings.MEDIA_ROOT}
+                ),
+        re_path(r'^static/(?P<path>.*)$',
+                serve, {'document_root': settings.STATIC_ROOT}
+                ),
     )
 
 

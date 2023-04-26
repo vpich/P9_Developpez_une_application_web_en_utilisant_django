@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.core.paginator import Paginator
-from django.core.exceptions import PermissionDenied, ObjectDoesNotExist, FieldError, BadRequest
+from django.core.exceptions import PermissionDenied, \
+    ObjectDoesNotExist, FieldError, BadRequest
 from django.contrib import messages
 from django.db.models import Q
 
@@ -28,13 +29,15 @@ def page_not_found_view(request, exception):
 
 def owner_permission(request, element):
     if request.user != element.user:
-        exception = "Vous ne pouvez pas modifier ou supprimer un post dont vous n'êtes pas le créateur."
+        exception = "Vous ne pouvez pas modifier " \
+                    "ou supprimer un post dont vous n'êtes pas le créateur."
         raise PermissionDenied(exception)
 
 
 def ticket_already_responded(ticket):
     if Review.objects.filter(ticket=ticket):
-        message = "Vous ne pouvez pas répondre à un ticket qui a déjà obtenu une réponse."
+        message = "Vous ne pouvez pas répondre à un ticket" \
+                  " qui a déjà obtenu une réponse."
         raise PermissionDenied(message)
 
 
@@ -214,8 +217,15 @@ class CreateReview(LoginRequiredMixin, View):
         review_form = self.review_form(request.POST)
         ticket_form = self.ticket_form(request.POST, request.FILES)
         if all([ticket_form.is_valid(), review_form.is_valid()]):
-            ticket = self.ticket_model.objects.create(request.user, ticket_form)
-            self.review_model.objects.create(request.user, review_form, ticket)
+            ticket = self.ticket_model.objects.create(
+                request.user,
+                ticket_form
+            )
+            self.review_model.objects.create(
+                request.user,
+                review_form,
+                ticket
+            )
             message = "Votre critique a été créée."
             messages.add_message(request, messages.SUCCESS, message)
             return redirect("feed")
@@ -320,7 +330,8 @@ class FollowPage(LoginRequiredMixin, View):
             if follow == FieldError:
                 message = "Vous ne pouvez pas vous suivre vous même."
             elif type(follow) == self.model:
-                message_success = f"Vous avez ajouté {follow.followed_user} à votre liste de suivi."
+                message_success = f"Vous avez ajouté {follow.followed_user} " \
+                                  f"à votre liste de suivi."
             elif follow == ObjectDoesNotExist:
                 message = "Aucun utilisateur ne correspond à ce nom."
             elif follow == BadRequest:

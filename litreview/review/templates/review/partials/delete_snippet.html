@@ -1,0 +1,35 @@
+{% load review_extras %}
+
+<section class="delete">
+    <h2>Suppression
+        {% if post|model_type == "Ticket" %}
+            d'une demande de critique
+        {% elif post|model_type == "Review" %}
+            d'une critique
+        {% elif post|model_type == "UserFollows" %}
+            d'un suivi
+        {% endif %}
+    </h2>
+    <p>Êtes-vous sûr de vouloir supprimer
+        {% if post|model_type == "Ticket" %}
+            "{{ post.title }}" ?
+        {% elif post|model_type == "Review" %}
+            "{{ post.headline }}" ?
+        {% elif post|model_type == "UserFollows" %}
+            "{{ follow.followed_user.username }}" de votre liste de suivi ?
+        {% endif %}
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Supprimer</button>
+    </form>
+    {% if post|model_type == "UserFollows" %}
+        <a href="{% url 'followed-users' %}">
+            <button>Retourner</button>
+        </a>
+    {% else %}
+        <a href="{% url 'feed' %}">
+            <button>Retourner</button>
+        </a>
+    {% endif %}
+</section>

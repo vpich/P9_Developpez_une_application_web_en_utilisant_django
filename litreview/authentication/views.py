@@ -35,7 +35,8 @@ class LoginPageView(View):
             elif self.users.filter(username=form.cleaned_data["username"]):
                 message = "Le mot de passe est erroné."
             elif user is None:
-                message = "L'utilisateur n'existe pas. Veuillez créer un compte si vous n'en possédez pas."
+                message = "L'utilisateur n'existe pas. " \
+                          "Veuillez créer un compte si vous n'en possédez pas."
             else:
                 message = "Le nom d'utilisateur ou le mot de passe est erroné."
         messages.add_message(request, messages.ERROR, message)

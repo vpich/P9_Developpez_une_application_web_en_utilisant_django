@@ -1,15 +1,5 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <section class="delete">
-        <h2>Suppression du suivi</h2>
-        <p>Êtes-vous sûr de vouloir supprimer {{ follow.followed_user.username }} de votre liste de suivi ?</p>
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit">Supprimer</button>
-        </form>
-        <a href="{% url 'followed-users' %}">
-            <button>Retourner</button>
-        </a>
-    </section>
+    {% include "review/partials/delete_snippet.html" with post=follow %}
 {% endblock %}
