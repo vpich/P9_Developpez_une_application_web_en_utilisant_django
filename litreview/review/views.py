@@ -5,6 +5,7 @@ from django.views import View
 from django.core.paginator import Paginator
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist, FieldError, BadRequest
 from django.contrib import messages
+from django.db.models import Q
 
 from .models import Ticket, Review, UserFollows
 from .forms import TicketForm, ReviewForm, FollowForm
@@ -39,20 +40,32 @@ def ticket_already_responded(ticket):
 def get_own_posts(request):
     tickets = Ticket.objects.filter(user=request.user.id)
     reviews = Review.objects.filter(user=request.user.id)
-
-    own_posts = chain(tickets, reviews)
-
+    own_posts = sorted(
+        chain(tickets, reviews),
+        key=lambda post: post.time_created,
+        reverse=True,
+    )
     return own_posts
 
 
-def get_followed_users_posts(request):
+def get_viewable_tickets(request):
     follows = UserFollows.objects.filter(user=request.user.id)
-    tickets = Ticket.objects.filter(user__in=follows.values("followed_user"))
-    reviews = Review.objects.filter(user__in=follows.values("followed_user"))
+    tickets = Ticket.objects.filter(
+        Q(user=request.user.id) |
+        Q(user__in=follows.values("followed_user"))
+    )
+    return tickets
 
-    followed_posts = chain(tickets, reviews)
 
-    return followed_posts
+def get_viewable_reviews(request):
+    own_tickets = Ticket.objects.filter(user=request.user.id)
+    follows = UserFollows.objects.filter(user=request.user.id)
+    reviews = Review.objects.filter(
+        Q(user=request.user.id) |
+        Q(user__in=follows.values("followed_user")) |
+        Q(ticket__in=own_tickets)
+    )
+    return reviews
 
 
 def get_tickets_responded(posts):
@@ -77,14 +90,20 @@ def pagination(request, posts):
     return page_obj
 
 
+def get_responses(user):
+    own_tickets = Ticket.objects.filter(user=user)
+    review = Review.objects.filter(ticket__in=own_tickets)
+    return chain(review)
+
+
 class Feed(LoginRequiredMixin, View):
 
     def get(self, request):
-        own_posts = get_own_posts(request)
-        followed_users_posts = get_followed_users_posts(request)
+        tickets = get_viewable_tickets(request)
+        reviews = get_viewable_reviews(request)
 
         posts = sorted(
-            chain(own_posts, followed_users_posts),
+            chain(tickets, reviews),
             key=lambda post: post.time_created,
             reverse=True
         )
@@ -102,13 +121,6 @@ class PostsPage(LoginRequiredMixin, View):
 
     def get(self, request):
         posts = get_own_posts(request)
-
-        posts = sorted(
-            posts,
-            key=lambda post: post.time_created,
-            reverse=True,
-        )
-
         page_obj = pagination(request, posts)
 
         return render(request,
