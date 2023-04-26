@@ -22,7 +22,8 @@ def permission_denied_view(request, exception):
 
 def page_not_found_view(request, exception):
     return render(request,
-                  "review/page_not_found.html")
+                  "review/page_not_found.html",
+                  {"exception": exception})
 
 
 def owner_permission(request, element):
@@ -37,9 +38,9 @@ def ticket_already_responded(ticket):
         raise PermissionDenied(message)
 
 
-def get_own_posts(request):
-    tickets = Ticket.objects.filter(user=request.user.id)
-    reviews = Review.objects.filter(user=request.user.id)
+def get_own_posts(user):
+    tickets = Ticket.objects.filter(user=user.id)
+    reviews = Review.objects.filter(user=user.id)
     own_posts = sorted(
         chain(tickets, reviews),
         key=lambda post: post.time_created,
@@ -48,20 +49,20 @@ def get_own_posts(request):
     return own_posts
 
 
-def get_viewable_tickets(request):
-    follows = UserFollows.objects.filter(user=request.user.id)
+def get_viewable_tickets(user):
+    follows = UserFollows.objects.filter(user=user.id)
     tickets = Ticket.objects.filter(
-        Q(user=request.user.id) |
+        Q(user=user.id) |
         Q(user__in=follows.values("followed_user"))
     )
     return tickets
 
 
-def get_viewable_reviews(request):
-    own_tickets = Ticket.objects.filter(user=request.user.id)
-    follows = UserFollows.objects.filter(user=request.user.id)
+def get_viewable_reviews(user):
+    own_tickets = Ticket.objects.filter(user=user.id)
+    follows = UserFollows.objects.filter(user=user.id)
     reviews = Review.objects.filter(
-        Q(user=request.user.id) |
+        Q(user=user.id) |
         Q(user__in=follows.values("followed_user")) |
         Q(ticket__in=own_tickets)
     )
@@ -84,23 +85,17 @@ def get_tickets_responded(posts):
 
 def pagination(request, posts):
     paginator = Paginator(posts, 5)
-
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return page_obj
 
 
-def get_responses(user):
-    own_tickets = Ticket.objects.filter(user=user)
-    review = Review.objects.filter(ticket__in=own_tickets)
-    return chain(review)
-
-
 class Feed(LoginRequiredMixin, View):
+    template_name = "review/feed.html"
 
     def get(self, request):
-        tickets = get_viewable_tickets(request)
-        reviews = get_viewable_reviews(request)
+        tickets = get_viewable_tickets(request.user)
+        reviews = get_viewable_reviews(request.user)
 
         posts = sorted(
             chain(tickets, reviews),
@@ -111,32 +106,39 @@ class Feed(LoginRequiredMixin, View):
         page_obj = pagination(request, posts)
         tickets_responded = get_tickets_responded(posts)
 
+        context = {"page_obj": page_obj,
+                   "tickets_responded": tickets_responded}
+
         return render(request,
-                      "review/feed.html",
-                      {"page_obj": page_obj,
-                       "tickets_responded": tickets_responded})
+                      self.template_name,
+                      context)
 
 
 class PostsPage(LoginRequiredMixin, View):
+    template_name = "review/posts.html"
 
     def get(self, request):
-        posts = get_own_posts(request)
+        posts = get_own_posts(request.user)
         page_obj = pagination(request, posts)
 
+        context = {"page_obj": page_obj}
+
         return render(request,
-                      "review/posts.html",
-                      {"page_obj": page_obj})
+                      self.template_name,
+                      context)
 
 
 class CreateTicket(LoginRequiredMixin, View):
+    template_name = "review/create_ticket.html"
     form = TicketForm
     model = Ticket
 
     def get(self, request):
         form = self.form()
+        context = {"form": form}
         return render(request,
-                      "review/create_ticket.html",
-                      {"form": form})
+                      self.template_name,
+                      context)
 
     def post(self, request):
         form = self.form(request.POST, request.FILES)
@@ -150,16 +152,18 @@ class CreateTicket(LoginRequiredMixin, View):
 
 
 class UpdateTicket(LoginRequiredMixin, View):
+    template_name = "review/update_ticket.html"
     form = TicketForm
 
     def get(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
         owner_permission(request, ticket)
         form = self.form(instance=ticket)
+
+        context = {"form": form, "ticket": ticket}
         return render(request,
-                      "review/update_ticket.html",
-                      {"form": form,
-                       "ticket": ticket})
+                      self.template_name,
+                      context)
 
     def post(self, request, ticket_id):
         ticket = get_object_or_404(Ticket, id=ticket_id)
@@ -174,32 +178,37 @@ class UpdateTicket(LoginRequiredMixin, View):
 
 
 class DeleteTicket(LoginRequiredMixin, View):
+    template_name = "review/delete_ticket.html"
+    model = Ticket
 
     def get(self, request, ticket_id):
-        ticket = get_object_or_404(Ticket, id=ticket_id)
+        ticket = get_object_or_404(self.model, id=ticket_id)
         owner_permission(request, ticket)
+        context = {"ticket": ticket}
         return render(request,
-                      "review/delete_ticket.html",
-                      {"ticket": ticket})
+                      self.template_name,
+                      context)
 
     def post(self, request, ticket_id):
-        ticket = get_object_or_404(Ticket, id=ticket_id)
+        ticket = get_object_or_404(self.model, id=ticket_id)
         ticket.delete()
         messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
         return redirect("posts")
 
 
 class CreateReview(LoginRequiredMixin, View):
+    template_name = "review/create_review.html"
     review_form = ReviewForm
     ticket_form = TicketForm
     ticket_model = Ticket
     review_model = Review
 
     def get(self, request):
+        context = {"review_form": self.review_form(),
+                   "ticket_form": self.ticket_form()}
         return render(request,
-                      "review/create_review.html",
-                      {"review_form": self.review_form(),
-                       "ticket_form": self.ticket_form()})
+                      self.template_name,
+                      context)
 
     def post(self, request):
         review_form = self.review_form(request.POST)
@@ -215,6 +224,7 @@ class CreateReview(LoginRequiredMixin, View):
 
 
 class CreateReviewResponse(LoginRequiredMixin, View):
+    template_name = "review/create_review_response.html"
     form = ReviewForm
     ticket_model = Ticket
     review_model = Review
@@ -223,10 +233,10 @@ class CreateReviewResponse(LoginRequiredMixin, View):
         form = self.form()
         ticket = self.ticket_model.objects.get(id=ticket_id)
         ticket_already_responded(ticket)
+        context = {"form": form, "ticket": ticket}
         return render(request,
-                      "review/create_review_response.html",
-                      {"form": form,
-                       "ticket": ticket})
+                      self.template_name,
+                      context)
 
     def post(self, request, ticket_id):
         form = self.form(request.POST)
@@ -241,6 +251,7 @@ class CreateReviewResponse(LoginRequiredMixin, View):
 
 
 class UpdateReview(LoginRequiredMixin, View):
+    template_name = "review/update_review.html"
     form = ReviewForm
     model = Review
 
@@ -248,10 +259,10 @@ class UpdateReview(LoginRequiredMixin, View):
         review = get_object_or_404(Review, id=review_id)
         owner_permission(request, review)
         form = self.form(instance=review)
+        context = {"form": form, "review": review}
         return render(request,
-                      "review/update_review.html",
-                      {"form": form,
-                       "review": review})
+                      self.template_name,
+                      context)
 
     def post(self, request, review_id):
         review = get_object_or_404(Review, id=review_id)
@@ -266,35 +277,39 @@ class UpdateReview(LoginRequiredMixin, View):
 
 
 class DeleteReview(LoginRequiredMixin, View):
+    template_name = "review/delete_review.html"
+    model = Review
 
     def get(self, request, review_id):
-        review = get_object_or_404(Review, id=review_id)
+        review = get_object_or_404(self.model, id=review_id)
         owner_permission(request, review)
+        context = {"review": review}
         return render(request,
-                      "review/delete_review.html",
-                      {"review": review})
+                      self.template_name,
+                      context)
 
     def post(self, request, review_id):
-        review = get_object_or_404(Review, id=review_id)
+        review = get_object_or_404(self.model, id=review_id)
         review.delete()
         messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
         return redirect("posts")
 
 
 class FollowPage(LoginRequiredMixin, View):
+    template_name = "review/follows.html"
     form = FollowForm
     model = UserFollows
 
     def get(self, request):
         form = self.form()
-        follows = UserFollows.objects.filter(user=request.user)
-        followers = UserFollows.objects.filter(followed_user=request.user)
-
+        follows = self.model.objects.filter(user=request.user)
+        followers = self.model.objects.filter(followed_user=request.user)
+        context = {"follows": follows,
+                   "form": form,
+                   "followers": followers}
         return render(request,
-                      "review/follows.html",
-                      {"follows": follows,
-                       "form": form,
-                       "followers": followers})
+                      self.template_name,
+                      context)
 
     def post(self, request):
         form = self.form(request.POST)
@@ -319,18 +334,19 @@ class FollowPage(LoginRequiredMixin, View):
 
 
 class DeleteFollow(LoginRequiredMixin, View):
+    template_name = "review/delete_follow.html"
     model = UserFollows
 
     def get(self, request, follow_id):
-        follow = self.model.objects.get(id=follow_id)
+        follow = get_object_or_404(self.model, id=follow_id)
         owner_permission(request, follow)
-
+        context = {"follow": follow}
         return render(request,
-                      "review/delete_follow.html",
-                      {"follow": follow})
+                      self.template_name,
+                      context)
 
     def post(self, request, follow_id):
-        follow = self.model.objects.get(id=follow_id)
+        follow = get_object_or_404(self.model, id=follow_id)
         follow.delete()
         messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
         return redirect("followed-users")

@@ -23,8 +23,6 @@ import authentication.views
 import review.views
 
 urlpatterns = [
-    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
-    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     path("", authentication.views.LoginPageView.as_view()),
     path("login/", authentication.views.LoginPageView.as_view(), name="login"),
     path("signup/", authentication.views.SignupPage.as_view(), name="signup"),
@@ -47,6 +45,11 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    urlpatterns += (
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    )
 
 
 handler403 = "review.views.permission_denied_view"
