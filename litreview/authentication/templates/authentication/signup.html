@@ -10,8 +10,8 @@
     <button type="submit">S'inscrire</button>
   </form>
 
-  <a href="{% url 'login' %}">
-      <button>Retourner</button>
-  </a>
+  <form action="{% url 'login' %}">
+      <button type="submit">Retourner</button>
+  </form>
 </div>
 {% endblock %}

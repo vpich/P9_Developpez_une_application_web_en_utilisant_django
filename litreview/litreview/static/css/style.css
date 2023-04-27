@@ -53,15 +53,15 @@ h3 {
 #login form p label {
   display: none;
 }
-#login form button {
-  float: right;
-}
 #login-form, #login-signup {
   width: 40vw;
 }
 #login-form h2 {
   margin-top: 0px;
   margin-bottom: 50px;
+}
+#login-form-button {
+  float: right;
 }
 
 #signup {
@@ -418,8 +418,11 @@ input {
 .delete {
   align-self: center;
 }
-.delete form {
+.delete-form {
   float: right;
+}
+.delete p {
+  text-align: center;
 }
 
 .exceptions {

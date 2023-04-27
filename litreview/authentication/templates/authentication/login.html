@@ -4,9 +4,9 @@
 <section id="login">
   <div id="login-signup">
     <h2>Inscrivez-vous maintenant</h2>
-    <a href="{% url 'signup' %}">
-      <button>S'inscrire</button>
-    </a>
+    <form action="{% url 'signup' %}">
+      <button type="submit">S'inscrire</button>
+    </form>
   </div>
 
   <div id="login-form">
@@ -14,7 +14,7 @@
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit">Se connecter</button>
+      <button id="login-form-button" type="submit">Se connecter</button>
     </form>
   </div>
 </section>

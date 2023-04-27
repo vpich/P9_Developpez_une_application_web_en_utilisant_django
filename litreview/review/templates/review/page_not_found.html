@@ -4,9 +4,9 @@
 <div class="exceptions">
     <h2>Erreur 404: page introuvable</h2>
     <p>La page que vous souhaitez accéder n'existe pas.</p>
-    <a href="{% url 'feed' %}">
-        <button>Retourner</button>
-    </a>
+    <form action="{% url 'feed' %}">
+        <button type="submit">Retourner</button>
+    </form>
 </div>
 
 {% endblock %}
