@@ -341,7 +341,7 @@ class FollowPage(LoginRequiredMixin, View):
         else:
             messages.add_message(request, messages.ERROR, message)
 
-        return redirect("followed-users")
+        return redirect("follows")
 
 
 class DeleteFollow(LoginRequiredMixin, View):
@@ -360,4 +360,4 @@ class DeleteFollow(LoginRequiredMixin, View):
         follow = get_object_or_404(self.model, id=follow_id)
         follow.delete()
         messages.add_message(request, messages.SUCCESS, DELETE_MESSAGE)
-        return redirect("followed-users")
+        return redirect("follows")

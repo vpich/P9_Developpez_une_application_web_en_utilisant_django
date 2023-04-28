@@ -24,7 +24,7 @@
         <button type="submit">Supprimer</button>
     </form>
     {% if post|model_type == "UserFollows" %}
-        <form action="{% url 'followed-users' %}">
+        <form action="{% url 'follows' %}">
             <button type="submit">Retourner</button>
         </form>
     {% else %}

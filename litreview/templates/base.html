@@ -16,7 +16,7 @@
           <nav>
               <a href="{% url 'feed' %}">Flux</a>
               <a href="{% url 'posts' %}">Posts</a>
-              <a href="{% url 'followed-users' %}">Abonnements</a>
+              <a href="{% url 'follows' %}">Abonnements</a>
               <a href="{% url 'logout' %}">Se déconnecter</a>
           </nav>
           {% endif %}
@@ -29,9 +29,11 @@
       {% endfor %}
 
         <div id="main-container">
-
             {% block content %}
             {% endblock %}
         </div>
+    <p id="credit">
+        Photo de <a href="https://unsplash.com/@syinq?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Susan Q Yin</a> sur <a href="https://unsplash.com/fr/photos/2JIvboGLeho?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+    </p>
     </body>
 </html>
