@@ -5,6 +5,7 @@ header {
     text-align: center;
     height: 40px;
     justify-content: right;
+    background-color: #fad29b;
     nav {
         margin: 10px;
         z-index: 4;
@@ -19,6 +20,10 @@ header {
 
 body {
     font-family: sans-serif;
+    background-image: url("../../media/backgrounds/susan-q-yin-2JIvboGLeho-unsplash.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
 }
 
 h1 {
@@ -102,6 +107,7 @@ button {
     padding-right: 15px;
     margin-top: 10px;
     margin-bottom: 10px;
+    background-color: #faaa4a;
     &:hover {
         filter: contrast(0.5);
         cursor: pointer;
@@ -116,9 +122,11 @@ input {
     width: 90%;
     height: 25px;
     border: solid 1px;
+    background-color: #fdf7ed;
 }
 
 #main-container {
+    background-color: rgb(228 203 174 / 79%);
     display: flex;
     border: solid 1px;
     border-top: none;
@@ -140,6 +148,7 @@ input {
         border: solid 1px;
         margin-top: 10px;
         margin-bottom: 10px;
+        background-color: #fad29b;
         &-buttons {
             text-align: right;
             display: flex;
@@ -174,6 +183,7 @@ input {
     display: flex;
     max-height: 450px;
     overflow: auto;
+    background-color: #fad29b;
     &-content {
         flex-direction: column;
         width: 100%;
@@ -219,13 +229,15 @@ input {
     #id_title {
             justify-self: center;
             width: 100%;
-            text-align: left;
     }
     textarea {
         border: solid 1px;
         width: 100%;
         justify-self: center;
         resize: none;
+        text-align: unset;
+        font-family: sans-serif;
+        background-color: #fdf7ed;
     }
     #id_image {
         width: 141px;
@@ -269,6 +281,7 @@ input {
 }
 
 #responded-ticket {
+    background-color: antiquewhite;
     border: solid 1px;
     margin: 8px;
     width: auto;
@@ -282,8 +295,10 @@ input {
         font-weight: normal;
     }
     &-ticket {
+        background-color: #fad29b;
         border: solid 1px;
         #ticket {
+            background-color: antiquewhite;
             border: solid 1px;
             margin: 15px;
             width: auto;
@@ -307,6 +322,7 @@ input {
         left: 21px;
     }
     &-review {
+        background-color: #fad29b;
         border: solid 1px;
         padding-bottom: 40px;
         button {
@@ -369,6 +385,7 @@ input {
         grid-template-columns: 3fr 1fr;
         align-items: center;
         border: solid 1px;
+        background-color: antiquewhite;
         p {
             outline: solid 1px;
             margin: unset;
@@ -379,8 +396,10 @@ input {
             padding: 5px;
             text-decoration: none;
             color: black;
+            background-color: #faaa4a;
+            border-left: solid 1px;
             &:hover {
-                backdrop-filter: contrast(0.5);
+                filter: contrast(0.5);
             }
             &:active {
                 filter: brightness(0.5);
@@ -388,6 +407,7 @@ input {
         }
     }
     &ers {
+        background-color: antiquewhite;
         p {
             margin: auto;
             padding: 5px;
@@ -455,4 +475,10 @@ input {
         color: red;
         font-weight: bold;
     }
+}
+
+#credit {
+    margin: 0px;
+    color: white;
+    text-align: right;
 }

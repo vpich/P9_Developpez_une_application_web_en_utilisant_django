@@ -5,6 +5,7 @@ header {
   text-align: center;
   height: 40px;
   justify-content: right;
+  background-color: #fad29b;
 }
 header nav {
   margin: 10px;
@@ -19,6 +20,10 @@ header nav a {
 
 body {
   font-family: sans-serif;
+  background-image: url("../../media/backgrounds/susan-q-yin-2JIvboGLeho-unsplash.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
 }
 
 h1 {
@@ -96,6 +101,7 @@ button {
   padding-right: 15px;
   margin-top: 10px;
   margin-bottom: 10px;
+  background-color: #faaa4a;
 }
 button:hover {
   filter: contrast(0.5);
@@ -110,9 +116,11 @@ input {
   width: 90%;
   height: 25px;
   border: solid 1px;
+  background-color: #fdf7ed;
 }
 
 #main-container {
+  background-color: rgba(228, 203, 174, 0.79);
   display: flex;
   border: solid 1px;
   border-top: none;
@@ -133,6 +141,7 @@ input {
   border: solid 1px;
   margin-top: 10px;
   margin-bottom: 10px;
+  background-color: #fad29b;
 }
 #posts .container-buttons, #feed .container-buttons {
   text-align: right;
@@ -162,6 +171,7 @@ input {
   display: flex;
   max-height: 450px;
   overflow: auto;
+  background-color: #fad29b;
 }
 #ticket-content, #review-content {
   flex-direction: column;
@@ -204,13 +214,15 @@ input {
 #create-ticket #id_title, #edit-ticket #id_title, #create-review-ticket #id_title {
   justify-self: center;
   width: 100%;
-  text-align: left;
 }
 #create-ticket textarea, #edit-ticket textarea, #create-review-ticket textarea {
   border: solid 1px;
   width: 100%;
   justify-self: center;
   resize: none;
+  text-align: unset;
+  font-family: sans-serif;
+  background-color: #fdf7ed;
 }
 #create-ticket #id_image, #edit-ticket #id_image, #create-review-ticket #id_image {
   width: 141px;
@@ -251,6 +263,7 @@ input {
 }
 
 #responded-ticket {
+  background-color: antiquewhite;
   border: solid 1px;
   margin: 8px;
   width: auto;
@@ -263,9 +276,11 @@ input {
   font-weight: normal;
 }
 #create-review-response-ticket, #edit-review-ticket, #create-review-ticket {
+  background-color: #fad29b;
   border: solid 1px;
 }
 #create-review-response-ticket #ticket, #edit-review-ticket #ticket, #create-review-ticket #ticket {
+  background-color: antiquewhite;
   border: solid 1px;
   margin: 15px;
   width: auto;
@@ -288,6 +303,7 @@ input {
   left: 21px;
 }
 #create-review-response-review, #edit-review-review, #create-review-review {
+  background-color: #fad29b;
   border: solid 1px;
   padding-bottom: 40px;
 }
@@ -348,6 +364,7 @@ input {
   grid-template-columns: 3fr 1fr;
   align-items: center;
   border: solid 1px;
+  background-color: antiquewhite;
 }
 #followed p {
   outline: solid 1px;
@@ -359,12 +376,17 @@ input {
   padding: 5px;
   text-decoration: none;
   color: black;
+  background-color: #faaa4a;
+  border-left: solid 1px;
 }
 #followed a:hover {
-  backdrop-filter: contrast(0.5);
+  filter: contrast(0.5);
 }
 #followed a:active {
   filter: brightness(0.5);
+}
+#followers {
+  background-color: antiquewhite;
 }
 #followers p {
   margin: auto;
@@ -431,6 +453,12 @@ input {
 .exceptions h2 {
   color: red;
   font-weight: bold;
+}
+
+#credit {
+  margin: 0px;
+  color: white;
+  text-align: right;
 }
 
 /*# sourceMappingURL=style.css.map */

@@ -4,7 +4,7 @@
 
 ## About The Project
 
-LITReview est un projet d'application Web en utilisant le framework Django.
+LITReview est un projet d'application Web en utilisant le framework Django dans le cadre d'une formation.
 
 L'objectif du site LITreview est de permettre à une communauté d'utilisateurs de consulter ou de solliciter une critique de livres à la demande.
 
@@ -35,7 +35,7 @@ L'objectif du site LITreview est de permettre à une communauté d'utilisateurs 
 Des exemples utilisateurs sont inclus dans la base de donnée.
 Pour se connecter avec un exemple d'utilisateur, saissisez dans la page login les identifiants suivants:
 - Nom d'utilisateur: toto
-- Mot de passe: Hello1234
+- Mot de passe: Hello1234!
 
 ## Features
 
